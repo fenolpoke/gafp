@@ -3,4 +3,7 @@
     <string name="login">Log In</string>
     <string name="register">Register</string>
     <string name="loginFacebook">Log In with Facebook</string>
+    //FACEBOOK
+    <string name="facebookAppId">945786762125302</string>
+    <string name="facebookAppSecret">945786762125302</string>
 </resources>
