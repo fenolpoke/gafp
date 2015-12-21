@@ -57,11 +57,10 @@
         android:layout_alignRight="@+id/loginButton"
         android:layout_alignEnd="@+id/loginButton" />
 
-    <Button
+    <com.facebook.login.widget.LoginButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loginFacebook"
-        android:id="@+id/facebookButton"
+        android:id="@+id/facebook_button"
         android:layout_below="@+id/registerButton"
         android:layout_alignRight="@+id/loginButton"
         android:layout_alignEnd="@+id/loginButton"
