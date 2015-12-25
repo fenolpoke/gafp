@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_edit_profile"
+            android:title="Edit Profile"
+            android:onClick="editProfile"/>
+        <item
+            android:id="@+id/nav_shop"
+            android:title="Shop"
+            android:onClick="shop" />
+        <item
+            android:id="@+id/nav_setting"
+            android:title="Settings"
+            android:onClick="settings"/>
+        <item
+            android:id="@+id/nav_log_out"
+            android:title="Log out"
+            android:onClick="logout"/>
+
+        <!--android:icon="@drawable/ic_menu_camera"-->
+
+
+    </group>
+
+
+</menu>

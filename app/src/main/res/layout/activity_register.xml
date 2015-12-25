@@ -15,11 +15,11 @@
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/emailEditText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/usernameEditText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/usernameEditText"
+        android:layout_alignEnd="@+id/usernameEditText" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -38,13 +38,12 @@
         android:layout_height="wrap_content"
         android:text="@string/register"
         android:id="@+id/registerButton"
-        android:layout_below="@+id/passwordEditText"
+        android:onClick="register"
+        android:layout_below="@+id/confirmPasswordEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="54dp"
-        android:layout_alignRight="@+id/confirmPasswordEditText"
-        android:layout_alignEnd="@+id/confirmPasswordEditText"
-        android:onClick="register" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -55,6 +54,18 @@
         android:layout_below="@+id/passwordEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/passwordEditText"
-        android:layout_alignEnd="@+id/passwordEditText" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/usernameEditText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
