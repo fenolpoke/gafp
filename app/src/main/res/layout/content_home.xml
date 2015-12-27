@@ -142,14 +142,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Timetable"
-            android:id="@+id/timetableButton" />
+            android:id="@+id/timetableButton"
+            android:onClick="toTimetable" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Habits"
             android:id="@+id/habitsButton"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:onClick="toHabits" />
     </GridLayout>
 
 </RelativeLayout>

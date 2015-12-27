@@ -35,7 +35,13 @@
         <activity
             android:name=".TimetableActivity"
             android:label="@string/title_activity_timetable"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HabitsActivity"
+            android:label="@string/title_activity_habits"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddTaskActivity" />
+        <activity android:name=".AddHabitActivity"></activity>
     </application>
 
 </manifest>
