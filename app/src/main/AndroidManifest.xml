@@ -41,7 +41,8 @@
             android:label="@string/title_activity_habits"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddTaskActivity" />
-        <activity android:name=".AddHabitActivity"></activity>
+        <activity android:name=".AddHabitActivity" />
+        <activity android:name=".ShopActivity"></activity>
     </application>
 
 </manifest>
