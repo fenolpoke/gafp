@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="edu.bluejack151.gafp.TimetableActivity">
+    tools:context="edu.bluejack151.gafp.TimetableActivity"
+    android:id="@+id/timetable">
 
+
+    <include layout="@layout/content_timetable" />
     <include layout="@layout/title_layout"
         android:id="@+id/title" />
-    <include layout="@layout/content_timetable" />
-
 </android.support.design.widget.CoordinatorLayout>

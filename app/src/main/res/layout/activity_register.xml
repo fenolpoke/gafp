@@ -19,7 +19,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/usernameEditText"
-        android:layout_alignEnd="@+id/usernameEditText" />
+        android:layout_alignEnd="@+id/usernameEditText"
+        android:hint="email" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -31,7 +32,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/emailEditText"
-        android:layout_alignEnd="@+id/emailEditText" />
+        android:layout_alignEnd="@+id/emailEditText"
+        android:hint="password" />
 
     <Button
         android:layout_width="wrap_content"
@@ -55,7 +57,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:hint="confirm password" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -67,5 +70,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:hint="username" />
 </RelativeLayout>

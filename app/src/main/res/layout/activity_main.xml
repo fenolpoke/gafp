@@ -20,7 +20,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:hint="email" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -32,7 +33,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/emailEditText"
-        android:layout_alignEnd="@+id/emailEditText" />
+        android:layout_alignEnd="@+id/emailEditText"
+        android:hint="password" />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,7 +46,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/passwordEditText"
         android:layout_alignEnd="@+id/passwordEditText"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:onClick="login" />
 
     <Button
         android:layout_width="wrap_content"
