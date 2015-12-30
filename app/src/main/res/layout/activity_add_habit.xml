@@ -21,7 +21,8 @@
         android:id="@+id/titleEditText"
         android:layout_alignTop="@+id/include2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp" />
+        android:layout_marginTop="44dp"
+        android:hint="title" />
 
     <EditText
         android:layout_width="match_parent"
@@ -30,12 +31,48 @@
         android:ems="10"
         android:id="@+id/descriptionEditText"
         android:layout_below="@+id/titleEditText"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:hint="description" />
 
-    <ExpandableListView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/expandableListView"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Type"
+        android:id="@+id/textView6"
         android:layout_below="@+id/descriptionEditText"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/textView6"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daily"
+            android:id="@+id/dailyRadioButton"
+            android:onClick="daily" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weekly"
+            android:id="@+id/weeklyRadioButton"
+            android:onClick="weekly" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monthly"
+            android:id="@+id/monthlyRadioButton"
+            android:onClick="monthly" />
+    </RadioGroup>
+
 </RelativeLayout>
