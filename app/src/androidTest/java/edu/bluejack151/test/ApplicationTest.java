@@ -1,4 +1,4 @@
-package edu.bluejack151.gafp;
+package edu.bluejack151.test;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

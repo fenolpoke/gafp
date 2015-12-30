@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     android:id="@+id/deadline">
 
     <TextView
@@ -9,6 +10,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="&lt;text here>"
+        android:textColor="#000000"
         android:id="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
