@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_edit_profile"
+            android:icon="@drawable/iconprofile"
+            android:title="Edit Profile" />
+        <item
+            android:id="@+id/nav_achievements"
+            android:icon="@drawable/iconachievement"
+            android:title="Achievement"/>
+        <item
+            android:id="@+id/nav_shop"
+            android:icon="@drawable/iconshop"
+            android:title="Shop"/>
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/iconsettings"
+            android:title="Settings"/>
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/iconlogout"
+            android:title="Log out"/>
+
+        <!--android:icon="@drawable/ic_menu_camera"-->
+
+
+    </group>
+
+
+</menu>

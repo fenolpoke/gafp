@@ -10,17 +10,30 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="edu.bluejack151.gafp.MainActivity">
 
+    <ImageView
+        android:layout_width="330dp"
+        android:layout_height="180dp"
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/titlelogo"
+        android:layout_marginBottom="20dp"
+        />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/emailEditText"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:gravity="center_horizontal"
+        android:hint="email"
+        android:fontFamily="Arial" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -32,11 +45,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/emailEditText"
-        android:layout_alignEnd="@+id/emailEditText" />
+        android:layout_alignEnd="@+id/emailEditText"
+        android:gravity="center_horizontal"
+        android:hint="password"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="Arial" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:text="@string/login"
         android:id="@+id/loginButton"
         android:layout_below="@+id/passwordEditText"
@@ -44,27 +62,34 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/passwordEditText"
         android:layout_alignEnd="@+id/passwordEditText"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:background="@drawable/btn_roundedrect"
+        android:onClick="login" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:text="@string/register"
         android:id="@+id/registerButton"
         android:layout_below="@+id/loginButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/loginButton"
-        android:layout_alignEnd="@+id/loginButton" />
+        android:layout_alignEnd="@+id/loginButton"
+        android:nestedScrollingEnabled="false"
+        android:background="@drawable/btn_roundedrect"
+        android:onClick="openRegister" />
 
-    <Button
+    <com.facebook.login.widget.LoginButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loginFacebook"
-        android:id="@+id/facebookButton"
+        android:layout_marginTop="10dp"
+        android:id="@+id/facebook_button"
         android:layout_below="@+id/registerButton"
         android:layout_alignRight="@+id/loginButton"
         android:layout_alignEnd="@+id/loginButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
 </RelativeLayout>
