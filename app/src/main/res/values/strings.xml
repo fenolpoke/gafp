@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GAfP</string>
+    <string name="app_name">GAFP</string>
     <string name="login">Log In</string>
     <string name="register">Register</string>
     <string name="loginFacebook">Log In with Facebook</string>

@@ -22,6 +22,7 @@
         android:layout_alignTop="@+id/include"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:gravity="center"
         android:hint="title" />
 
     <EditText
@@ -31,14 +32,27 @@
         android:ems="10"
         android:id="@+id/descriptionEditText"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:lines="3"
         android:layout_below="@+id/titleEditText"
         android:hint="description" />
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descriptionEditText"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Deadline"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:id="@+id/DeadlineText" />
+
     <DatePicker
         android:layout_width="match_parent"
-        android:layout_height="116dp"
+        android:layout_height="200dp"
         android:id="@+id/datePicker"
-        android:layout_below="@+id/descriptionEditText"
+        android:layout_below="@+id/DeadlineText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
