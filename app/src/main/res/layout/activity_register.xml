@@ -9,6 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.bluejack151.gafp.RegisterActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/title"
+        android:id="@+id/registerLabel"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="Register Now ! It's Free !" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +30,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/usernameEditText"
         android:layout_alignEnd="@+id/usernameEditText"
-        android:hint="email" />
+        android:hint="email"
+        android:gravity="center"
+        android:fontFamily="Arial Rounded MT" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -33,19 +45,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/emailEditText"
         android:layout_alignEnd="@+id/emailEditText"
-        android:hint="password" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/register"
-        android:id="@+id/registerButton"
-        android:onClick="register"
-        android:layout_below="@+id/confirmPasswordEditText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:hint="password"
+        android:gravity="center"
+        android:fontFamily="Arial Rounded MT" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -58,7 +60,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:hint="confirm password" />
+        android:hint="confirm password"
+        android:gravity="center"
+        android:fontFamily="Arial Rounded MT" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -66,10 +70,38 @@
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/usernameEditText"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/registerLabel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:hint="username" />
+        android:hint="username"
+        android:gravity="center"
+        android:fontFamily="Arial Rounded MT" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:id="@+id/registerButton"
+        android:onClick="register"
+        android:layout_below="@+id/confirmPasswordEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/btn_roundedrect"
+        android:layout_marginTop="5dp"
+        />
+
+    <ImageView
+        android:layout_width="330dp"
+        android:layout_height="180dp"
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/titlelogo"
+        android:layout_marginBottom="5dp"
+        />
+
 </RelativeLayout>

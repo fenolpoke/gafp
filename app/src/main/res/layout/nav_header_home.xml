@@ -25,6 +25,8 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -34,17 +36,32 @@
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:text="&lt;username here>"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="24dp"
             android:layout_row="0"
             android:layout_column="1"
             android:id="@+id/usernameTextView" />
 
-        <TextView
-            android:id="@+id/rankTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&lt;rank and level here>"
-            android:layout_row="1"
-            android:layout_column="1" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="255dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/icontrophy"
+                android:id="@+id/imageView" />
+
+            <TextView
+                android:id="@+id/rankTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:layout_marginLeft="10dp"
+                android:text="&lt;rank and level here>"
+                android:layout_row="1"
+                android:layout_column="1" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,11 +69,25 @@
             android:text="&lt;next level here>"
             android:id="@+id/nextLevelTextView" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&lt;money here>"
-            android:id="@+id/moneyTextView" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/iconmoney"
+                android:id="@+id/imageView2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:layout_marginLeft="10dp"
+                android:text="&lt;money here>"
+                android:id="@+id/moneyTextView" />
+        </LinearLayout>
 
     </LinearLayout>
 
