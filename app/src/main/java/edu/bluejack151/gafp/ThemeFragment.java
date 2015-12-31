@@ -71,8 +71,6 @@ public class ThemeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        Toast.makeText(getActivity().getApplicationContext(),"Test",Toast.LENGTH_LONG).show();
-
         firebase.setAndroidContext(getActivity().getApplicationContext());
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
 
@@ -96,7 +94,6 @@ public class ThemeFragment extends Fragment {
                     thPrice.setText(price);
                     thTitle.setText(title);
 
-                    Toast.makeText(getActivity().getApplicationContext(), title , Toast.LENGTH_LONG).show();
                     ((LinearLayout) getActivity().findViewById(R.id.themeLinearLayout)).addView(layoutTheme);
                 }
             }

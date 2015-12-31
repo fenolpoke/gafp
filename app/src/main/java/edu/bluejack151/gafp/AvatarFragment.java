@@ -1,12 +1,25 @@
 package edu.bluejack151.gafp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.Vector;
 
 
 /**
@@ -26,6 +39,8 @@ public class AvatarFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Firebase firebase;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,6 +73,73 @@ public class AvatarFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        firebase.setAndroidContext(getActivity().getApplicationContext());
+        firebase = new Firebase("https://tpa-gap.firebaseio.com/");
+
+        final Vector<String> userOwnedAvatar = new Vector<String>();
+        firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Toast.makeText(getActivity().getApplicationContext(), dataSnapshot.getChildrenCount() + "", Toast.LENGTH_LONG).show();
+                DataSnapshot ownedAvatar = dataSnapshot.child("avatar");
+                for (final DataSnapshot avatar : ownedAvatar.getChildren()) {
+                    userOwnedAvatar.add(avatar.getKey().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        firebase.child("shops/avatar").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Toast.makeText(getActivity().getApplicationContext(), dataSnapshot.getChildrenCount() + "", Toast.LENGTH_LONG).show();
+                for (final DataSnapshot avatar : dataSnapshot.getChildren()) {
+                    View layoutAvatar = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.avatar_layout, null);
+                    TextView avTitle = (TextView) layoutAvatar.findViewById(R.id.avatarTitle);
+                    TextView avPrice = (TextView) layoutAvatar.findViewById(R.id.avatarPrice);
+                    ImageView avImage = (ImageView) layoutAvatar.findViewById(R.id.avatarImageShop);
+
+                    String title = avatar.child("name").getValue().toString();
+                    String price = avatar.child("price").getValue().toString();
+                    String imageName = avatar.getKey().toString();
+
+                    int avaID = getResources().getIdentifier(imageName, "drawable", getActivity().getPackageName());
+                    avImage.setImageResource(avaID);
+                    avPrice.setText(price);
+                    avTitle.setText(title);
+
+                    Button btnPurchase = (Button) layoutAvatar.findViewById(R.id.btnPurchaseAvatar);
+                    btnPurchase.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity().getApplicationContext(),"Purchased "+v.getId(),Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    if (userOwnedAvatar.contains(imageName)) {
+                        btnPurchase.setText("PURCHASED");
+                        btnPurchase.setEnabled(false);
+                        btnPurchase.setBackgroundColor(Color.GRAY);
+                    } else {
+
+                    }
+
+                    ((LinearLayout) getActivity().findViewById(R.id.avatarLinearLayout)).addView(layoutAvatar);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     @Override
