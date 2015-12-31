@@ -34,7 +34,7 @@ public class HabitsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habits);
 
-        ImageButton addButton = (ImageButton) findViewById(R.id.habits).findViewById(R.id.addButton);
+        ImageButton addButton = (ImageButton) findViewById(R.id.addButton);
 
         ((TextView) findViewById(R.id.titleTextView)).setText("Habits");
 //        addButton.setText("Add habit");
@@ -49,14 +49,16 @@ public class HabitsActivity extends AppCompatActivity {
 
         Firebase.setAndroidContext(getApplicationContext());
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
-        firebase.child("users/" + firebase.getAuth().getUid() + "/habits").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
-                for (final DataSnapshot type : dataSnapshot.getChildren()) {
+
+                DataSnapshot habits = dataSnapshot.child("habits");
+                for (final DataSnapshot type : habits.getChildren()) {
                     for (final DataSnapshot habit : type.getChildren()) {
                         View habitL = LayoutInflater.from(getApplicationContext()).inflate(R.layout.habit_layout, null);
 
-                        ((TextView) habitL.findViewWithTag("frequency")).setText(habit.child("type").getValue().toString());
+                        ((TextView) habitL.findViewWithTag("frequency")).setText(type.getKey());
                         ((TextView) habitL.findViewWithTag("title")).setText(habit.getKey());
                         ((TextView) habitL.findViewWithTag("description")).setText(habit.child("description").getValue().toString());
 

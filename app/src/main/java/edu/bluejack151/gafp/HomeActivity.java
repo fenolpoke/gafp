@@ -153,7 +153,11 @@ public class HomeActivity extends AppCompatActivity
                                                                                                                   final int span = type.getKey().equalsIgnoreCase("daily") ? 1 : type.getKey().equalsIgnoreCase("weekly") ? 7 : 30;
 
                                                                                                                   if (habit.hasChild("last")) {
-                                                                                                                      last = new Date(habit.child("last").getValue().toString());
+                                                                                                                      try {
+                                                                                                                          last = new SimpleDateFormat("dd-MM-yyyy").parse(habit.child("last").getValue().toString());
+                                                                                                                      }catch (Exception e){
+
+                                                                                                                      }
                                                                                                                   }
 
                                                                                                                   if (TimeUnit.DAYS.convert(now.getTime() - last.getTime(), TimeUnit.MILLISECONDS) > span) {

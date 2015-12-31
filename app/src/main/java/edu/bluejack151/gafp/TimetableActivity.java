@@ -2,6 +2,7 @@ package edu.bluejack151.gafp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +32,7 @@ public class TimetableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timetable);
 
-        ImageButton addButton = (ImageButton)findViewById(R.id.timetable).findViewById(R.id.addButton);
+        ImageButton addButton = (ImageButton)findViewById(R.id.addButton);
 
         ((TextView)findViewById(R.id.titleTextView)).setText("Timetable");
 //        addButton.setText("Add task");
@@ -44,12 +46,20 @@ public class TimetableActivity extends AppCompatActivity {
         Firebase.setAndroidContext(getApplicationContext());
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
 
-        firebase.child("users/" + firebase.getAuth().getUid()+"/tasks").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
-                for (final DataSnapshot deadline : dataSnapshot.getChildren()) {
+
+                DataSnapshot tasks = dataSnapshot.child("tasks");
+                for (final DataSnapshot deadline : tasks.getChildren()) {
                     for (final DataSnapshot task : deadline.getChildren()) {
-                        Date now = Calendar.getInstance().getTime(), date = new Date(deadline.getKey());
+                        Date now, date;
+                        now = date = null;
+                        try {
+                            now = Calendar.getInstance().getTime();
+                            date = new SimpleDateFormat("dd-MM-yyyy").parse(deadline.getKey());
+                        } catch (Exception e) {
+                        }
 
                         final long remaining = TimeUnit.DAYS.convert(date.getTime() - now.getTime(), TimeUnit.MILLISECONDS);
 
@@ -66,13 +76,13 @@ public class TimetableActivity extends AppCompatActivity {
                         if (task.hasChild("done") || remaining < 0) {
                             cb.setEnabled(false);
                             cb.setChecked(true);
-                        }else {
+                        } else {
                             ((TextView) timetable.findViewWithTag("title")).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent i = new Intent(getApplicationContext(),EditTaskActivity.class);
-                                    i.putExtra("date",deadline.getKey());
-                                    i.putExtra("title",task.getKey());
+                                    Intent i = new Intent(getApplicationContext(), EditTaskActivity.class);
+                                    i.putExtra("date", deadline.getKey());
+                                    i.putExtra("title", task.getKey());
                                     startActivity(i);
                                 }
                             });
@@ -84,7 +94,7 @@ public class TimetableActivity extends AppCompatActivity {
                                         firebase.child("users/"
                                                 + firebase.getAuth().getUid()
                                                 + "/tasks/"
-                                                + deadline.getKey()+"/"+task.getKey()+"/done")
+                                                + deadline.getKey() + "/" + task.getKey() + "/done")
                                                 .setValue(true);
 
                                         int point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());

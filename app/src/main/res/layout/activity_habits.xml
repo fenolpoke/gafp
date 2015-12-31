@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="edu.bluejack151.gafp.HabitsActivity"
-    android:id="@+id/habits">
+    tools:context="edu.bluejack151.gafp.HabitsActivity">
 
     <include layout="@layout/content_habits" />
 

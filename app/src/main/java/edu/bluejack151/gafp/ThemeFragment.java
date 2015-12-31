@@ -7,6 +7,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 
 /**
@@ -26,6 +35,8 @@ public class ThemeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Firebase firebase;
 
     private OnFragmentInteractionListener mListener;
 
@@ -54,10 +65,47 @@ public class ThemeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Toast.makeText(getActivity().getApplicationContext(),"Test",Toast.LENGTH_LONG).show();
+
+        firebase.setAndroidContext(getActivity().getApplicationContext());
+        firebase = new Firebase("https://tpa-gap.firebaseio.com/");
+
+        firebase.child("shops/themes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Toast.makeText(getActivity().getApplicationContext(),dataSnapshot.getChildrenCount()+"",Toast.LENGTH_LONG).show();
+                for (final DataSnapshot theme : dataSnapshot.getChildren()) {
+                    View layoutTheme = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.theme_layout, null);
+                    TextView thTitle = (TextView) layoutTheme.findViewById(R.id.themeTitle);
+                    TextView thPrice = (TextView) layoutTheme.findViewById(R.id.themePrice);
+                    ImageView thImage = (ImageView) layoutTheme.findViewById(R.id.themeImageView);
+
+                    String title = theme.child("name").getValue().toString();
+                    String price = theme.child("price").getValue().toString();
+                    String imageName = theme.getKey().toString();
+
+                    int avaID = getResources().getIdentifier(imageName, "drawable", getActivity().getPackageName());
+                    thImage.setImageResource(avaID);
+                    thPrice.setText(price);
+                    thTitle.setText(title);
+
+                    Toast.makeText(getActivity().getApplicationContext(), title , Toast.LENGTH_LONG).show();
+                    ((LinearLayout) getActivity().findViewById(R.id.themeLinearLayout)).addView(layoutTheme);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     @Override
