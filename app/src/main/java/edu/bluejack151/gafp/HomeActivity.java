@@ -312,7 +312,8 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_edit_profile) {
-            // Handle the camera action
+            Toast.makeText(HomeActivity.this, "Opening edit profile..", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), EditProfileActivity.class));
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_shop) {

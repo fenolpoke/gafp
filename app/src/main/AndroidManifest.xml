@@ -67,7 +67,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".EditTaskActivity" />
         <activity android:name=".EditHabitActivity" />
-        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
 </manifest>
