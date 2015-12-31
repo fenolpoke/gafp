@@ -53,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
         LoginButton facebookButton = (LoginButton) findViewById(R.id.facebook_button);
 
-        if (facebookButton.getText().toString().equalsIgnoreCase("log out")) {
+        facebookButton.setReadPermissions("email");
+
+        if (!checkFacebookUser()) {
             LoginManager.getInstance().logOut();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
@@ -79,117 +81,96 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this, "Login with facebook succeeded!", Toast.LENGTH_SHORT).show();
 
-                firebase.child("users/" + loginResult.getAccessToken().getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.hasChildren()) {
-                            Toast.makeText(MainActivity.this, "Creating user..", Toast.LENGTH_SHORT).show();
-                            GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                if(!checkFacebookUser()){
+                    Toast.makeText(MainActivity.this, "Creating user..", Toast.LENGTH_SHORT).show();
+
+                    GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(final JSONObject object, GraphResponse response) {
+
+
+                            Toast.makeText(MainActivity.this, "Mapping user..", Toast.LENGTH_SHORT).show();
+
+                            String email = null;
+
+                            try {
+                                email = object.getString("email");
+                            } catch (Exception e) {
+                                Log.e("getting email", e.getMessage());
+                                email = loginResult.getAccessToken().getUserId() + "@yahoo.com";
+                            }
+
+
+                            final String finalEmail = email;
+                            firebase.createUser(email, "", new Firebase.ResultHandler() {
                                 @Override
-                                public void onCompleted(final JSONObject object, GraphResponse response) {
-
-
-                                    Toast.makeText(MainActivity.this, "Mapping user..", Toast.LENGTH_SHORT).show();
-                                    Map<String, Object> def = new HashMap<String, Object>();
-                                    def.put("default", true);
-
-                                    Map<String, Object> values = new HashMap<String, Object>();
-                                    values.put("username", Profile.getCurrentProfile().getName());
-                                    values.put("themes", def);
-                                    values.put("avatar", def);
-                                    values.put("money", 0);
-                                    values.put("rank", "amateur");
-                                    values.put("point", 0);
-                                    values.put("password", "");
-
-                                    String email = null;
-
+                                public void onSuccess() {
                                     try {
-                                        email = object.getString("email");
-                                    } catch (Exception e) {
-                                        Log.e("getting email", e.getMessage());
-                                        email = loginResult.getAccessToken().getUserId()+"@yahoo.com";
-                                    }
+                                        Toast.makeText(MainActivity.this, "Authenticating...", Toast.LENGTH_SHORT).show();
+                                        firebase.authWithPassword(object.getString("email"), "", new Firebase.AuthResultHandler() {
+                                            @Override
+                                            public void onAuthenticated(AuthData authData) {
+                                                if (authData != null) {
 
-                                    values.put("email",email);
 
-                                    Map<String, Object> user = new HashMap<String, Object>();
-                                    user.put(loginResult.getAccessToken().getUserId(), values);
+                                                    Map<String, Object> def = new HashMap<String, Object>();
+                                                    def.put("default", true);
 
-                                    firebase.child("users").updateChildren(user);
+                                                    Map<String, Object> values = new HashMap<String, Object>();
+                                                    values.put("username", Profile.getCurrentProfile().getName());
+                                                    values.put("themes", def);
+                                                    values.put("avatar", def);
+                                                    values.put("money", 0);
+                                                    values.put("rank", "amateur");
+                                                    values.put("point", 0);
+                                                    values.put("password", "");
+                                                    values.put("email", finalEmail);
 
-                                    firebase.createUser(email, "", new Firebase.ResultHandler() {
-                                        @Override
-                                        public void onSuccess() {
-                                            try {
-                                                Toast.makeText(MainActivity.this, "Authenticating...", Toast.LENGTH_SHORT).show();
-                                                firebase.authWithPassword(object.getString("email"), "", new Firebase.AuthResultHandler() {
-                                                    @Override
-                                                    public void onAuthenticated(AuthData authData) {
-                                                        if (authData != null) {
-                                                            Toast.makeText(MainActivity.this, "Login " + loginResult.getAccessToken().getUserId() + " Success!", Toast.LENGTH_SHORT).show();
-                                                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                                                        } else {
-                                                            Toast.makeText(MainActivity.this, "Error logining", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
+                                                    Map<String, Object> user = new HashMap<String, Object>();
+                                                    user.put(authData.getUid(), values);
 
-                                                    @Override
-                                                    public void onAuthenticationError(FirebaseError firebaseError) {
-                                                        Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                            } catch (Exception e) {
-                                                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    firebase.child("users").updateChildren(user);
+
+
+                                                    Toast.makeText(MainActivity.this, "Login " + Profile.getCurrentProfile().getName() + " Success!", Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                                                } else {
+                                                    Toast.makeText(MainActivity.this, "Error logining", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
-                                        }
 
-                                        @Override
-                                        public void onError(FirebaseError firebaseError) {
+                                            @Override
+                                            public void onAuthenticationError(FirebaseError firebaseError) {
+                                                Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                                            Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                @Override
+                                public void onError(FirebaseError firebaseError) {
 
-
+                                    Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
 
-                            Bundle parameters = new Bundle();
-//                            parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location");
-                            parameters.putString("fields", "email");
-                            graphRequest.setParameters(parameters);
-                            graphRequest.executeAsync();
 
-                        } else {
-                            Toast.makeText(MainActivity.this, "Loggin in...", Toast.LENGTH_SHORT).show();
-                            firebase.authWithPassword(
-                                    dataSnapshot.child("email").getValue().toString(),
-                                    dataSnapshot.child("password").getValue().toString(),
-                                    new Firebase.AuthResultHandler() {
-                                        @Override
-                                        public void onAuthenticated(AuthData authData) {
-                                            Toast.makeText(MainActivity.this, "Login success!", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                                        }
 
-                                        @Override
-                                        public void onAuthenticationError(FirebaseError firebaseError) {
-                                            Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    });
                         }
-                    }
+                    });
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-                        Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Bundle parameters = new Bundle();
+//                            parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location");
+                    parameters.putString("fields", "email");
+                    graphRequest.setParameters(parameters);
+                    graphRequest.executeAsync();
 
-                    }
-                });
+                }
 
             }
+
 
             @Override
             public void onCancel() {
@@ -226,6 +207,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    boolean checkFacebookUser(){
+
+        if (Profile.getCurrentProfile() != null) return false;
+
+        firebase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot user : dataSnapshot.getChildren()) {
+                    if (user.hasChild("facebook") && user.child("facebook").getValue().toString() == Profile.getCurrentProfile().getId()) {
+                        firebase.authWithPassword(user.child("email").getValue().toString(), user.child("password").getValue().toString(), new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                if (authData != null) {
+                                    Toast.makeText(MainActivity.this, "Facebook login authenticated!", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+
+                                }
+                            }
+
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        return false;
+    }
     public void login(View view) {
         Toast.makeText(MainActivity.this, "Loggin in...", Toast.LENGTH_SHORT).show();
 
