@@ -58,9 +58,6 @@ public class AddTaskActivity extends AppCompatActivity {
                 DatePicker dp = (DatePicker) findViewById(R.id.datePicker);
                 Date deadline = new Date(dp.getYear(),dp.getMonth(),dp.getDayOfMonth());
 
-
-                int a = 10;
-
                 if(now.after(deadline)){
                     Toast.makeText(AddTaskActivity.this, "Deadline must be in the future!", Toast.LENGTH_SHORT).show();
                     return;
