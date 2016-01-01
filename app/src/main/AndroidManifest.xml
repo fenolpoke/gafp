@@ -3,7 +3,7 @@
     package="edu.bluejack151.gafp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcherg"
@@ -65,10 +65,21 @@
             android:name=".ShopActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".EditTaskActivity" />
-        <activity android:name=".EditHabitActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".EditTaskActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EditHabitActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EditProfileActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SettingActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AchievementActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

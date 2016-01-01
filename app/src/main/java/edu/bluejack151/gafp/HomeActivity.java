@@ -316,12 +316,19 @@ public class HomeActivity extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(), EditProfileActivity.class));
         } else if (id == R.id.nav_setting) {
 
+            Toast.makeText(HomeActivity.this, "Opening setting..", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), SettingActivity.class));
         } else if (id == R.id.nav_shop) {
             Toast.makeText(HomeActivity.this, "Opening shop..", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), ShopActivity.class));
         } else if (id == R.id.nav_log_out) {
+            Toast.makeText(HomeActivity.this, "Logging out..", Toast.LENGTH_SHORT).show();
             firebase.unauth();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+        }else if (id == R.id.nav_achievements) {
+            Toast.makeText(HomeActivity.this, "Opening achievement..", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), AchievementActivity.class));
 
         }
 
