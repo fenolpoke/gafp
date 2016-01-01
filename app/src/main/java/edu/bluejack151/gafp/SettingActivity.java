@@ -1,6 +1,11 @@
 package edu.bluejack151.gafp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +25,9 @@ public class SettingActivity extends AppCompatActivity {
     Firebase firebase;
 
     String frequency = null;
+
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,4 +74,26 @@ public class SettingActivity extends AppCompatActivity {
         frequency = "7";
 
     }
+
+    public void disableReceiver(){
+        ComponentName receiver = new ComponentName(getApplicationContext(), MainBootReceiver.class);
+        PackageManager pm = getApplicationContext().getPackageManager();
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    public void cancelAlarm(){
+
+
+        alarmMgr = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), MainBootReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+
+        if (alarmMgr!= null) {
+            alarmMgr.cancel(alarmIntent);
+        }
+    }
+
 }
