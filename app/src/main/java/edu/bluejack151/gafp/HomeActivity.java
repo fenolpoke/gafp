@@ -1,5 +1,8 @@
 package edu.bluejack151.gafp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -38,6 +41,8 @@ public class HomeActivity extends AppCompatActivity
 
 
     Firebase firebase;
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
 
     @Override
@@ -47,6 +52,33 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(getApplicationContext(), MainBootReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, i, 0);
+
+        firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int hour = 8;
+                if (dataSnapshot.hasChild("settings/notification")) {
+                    hour = Integer.parseInt(dataSnapshot.child("settings/notification").getValue().toString());
+                }
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, hour);
+
+                // With setInexactRepeating(), you have to use one of the AlarmManager interval
+                // constants--in this case, AlarmManager.INTERVAL_DAY.
+                alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                        AlarmManager.INTERVAL_DAY, alarmIntent);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,154 +97,169 @@ public class HomeActivity extends AppCompatActivity
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
 
         firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                                                  @Override
-                                                                                                  public void onDataChange(final DataSnapshot dataSnapshot) {
-                                                                                                      final String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                final String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
 
-                                                                                                      String name = dataSnapshot.hasChild("username") ? dataSnapshot.child("username").getValue().toString() : "User";
-                                                                                                      String rank = dataSnapshot.child("rank").getValue().toString();
-                                                                                                      String nextLevel = dataSnapshot.child("point").getValue().toString();
-                                                                                                      String money = dataSnapshot.child("money").getValue().toString();
+                String name = dataSnapshot.hasChild("username") ? dataSnapshot.child("username").getValue().toString() : "User";
+                String rank = dataSnapshot.child("rank").getValue().toString();
+                String nextLevel = dataSnapshot.child("point").getValue().toString();
+                String money = dataSnapshot.child("money").getValue().toString();
 
-                                                                                                      ImageView avatar = (ImageView) findViewById(R.id.avatarImageView);
-                                                                                                      DataSnapshot ava = dataSnapshot.child("avatar");
-                                                                                                      String avatarString = "";
-                                                                                                      for(final DataSnapshot activeAvatar : ava.getChildren())
-                                                                                                      {
-                                                                                                          if(activeAvatar.getValue() == true){
-                                                                                                              avatarString = activeAvatar.getKey().toString();
-                                                                                                              break;
-                                                                                                          }
-                                                                                                      }
-                                                                                                      int avaID = getResources().getIdentifier(avatarString,"drawable",getPackageName());
-                                                                                                      avatar.setImageResource(avaID);
+                ImageView avatar = (ImageView) findViewById(R.id.avatarImageView);
+                DataSnapshot ava = dataSnapshot.child("avatar");
+                String avatarString = "";
+                for (final DataSnapshot activeAvatar : ava.getChildren()) {
+                    if (activeAvatar.getValue() == true) {
+                    avatarString = activeAvatar.getKey().toString();
+                    break;
+                    }
+                }
+                int avaID = getResources().getIdentifier(avatarString, "drawable", getPackageName());
+                avatar.setImageResource(avaID);
 
-                                                                                                      TextView usernameText = (TextView) findViewById(R.id.usernameTextView);
-                                                                                                      TextView rankText = (TextView) findViewById(R.id.rankTextView);
-                                                                                                      TextView nextlevelText = (TextView) findViewById(R.id.nextLevelTextView);
-                                                                                                      TextView moneyText = (TextView) findViewById(R.id.moneyTextView);
+                TextView usernameText = (TextView) findViewById(R.id.usernameTextView);
+                TextView rankText = (TextView) findViewById(R.id.rankTextView);
+                TextView nextlevelText = (TextView) findViewById(R.id.nextLevelTextView);
+                TextView moneyText = (TextView) findViewById(R.id.moneyTextView);
 
-                                                                                                      usernameText.setText(name);
-                                                                                                      rankText.setText(rank);
-                                                                                                      nextlevelText.setText("Points : "+nextLevel);
-                                                                                                      moneyText.setText(money);
+                usernameText.setText(name);
+                rankText.setText(rank);
+                nextlevelText.setText("Points : " + nextLevel);
+                moneyText.setText(money);
 
-                                                                                                      ((TextView) findViewById(R.id.goodday)).
-                                                                                                              setText("What's up, " + name);
+                ((TextView) findViewById(R.id.goodday)).
+                setText("What's up, " + name);
 
-                                                                                                      if (dataSnapshot.child("tasks").exists()) {
-                                                                                                          DataSnapshot tasks = dataSnapshot.child("tasks");
-                                                                                                          if (tasks.hasChild(date)) {
-                                                                                                              DataSnapshot today = tasks.child(date);
-                                                                                                              for (final DataSnapshot task : today.getChildren()) {
-                                                                                                                  if (!task.hasChild("done")) {
-                                                                                                                      View deadline = LayoutInflater.from(getApplicationContext()).inflate(R.layout.deadline, null);
+                if (dataSnapshot.child("tasks").exists()) {
+                    DataSnapshot tasks = dataSnapshot.child("tasks");
+                    if (tasks.hasChild(date)) {
+                        DataSnapshot today = tasks.child(date);
+                        for (final DataSnapshot task : today.getChildren()) {
+                            if (!task.hasChild("done")) {
+                                View deadline = LayoutInflater.from(getApplicationContext()).inflate(R.layout.deadline, null);
 
-                                                                                                                      ((TextView) deadline.findViewWithTag("text")).setText(date);
-                                                                                                                      ((CheckBox) deadline.findViewWithTag("check")).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                                                                                          @Override
-                                                                                                                          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                                                                                              if (isChecked) {
-                                                                                                                                  firebase.child("users/"
-                                                                                                                                          + firebase.getAuth().getUid()
-                                                                                                                                          + "/tasks/"
-                                                                                                                                          + date + "/" + task.getKey() + "/done").setValue(true);
+                                ((TextView) deadline.findViewWithTag("text")).setText(date);
+                                ((CheckBox) deadline.findViewWithTag("check")).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                if (isChecked) {
+                                    firebase.child("users/"
+                                            + firebase.getAuth().getUid()
+                                            + "/tasks/"
+                                            + date + "/" + task.getKey() + "/done").setValue(true);
 
+                                    int point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());
 
-                                                                                                                                  int point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());
-
-                                                                                                                                  firebase.child("users/"
-                                                                                                                                          + firebase.getAuth().getUid()
-                                                                                                                                          + "/point").setValue(point + 10);
+                                    firebase.child("users/"
+                                            + firebase.getAuth().getUid()
+                                            + "/point").setValue(point + 10);
 
 
-                                                                                                                                  Toast.makeText(HomeActivity.this, "Task finished!", Toast.LENGTH_SHORT).show();
-                                                                                                                              }
+                                    Toast.makeText(HomeActivity.this, "Task finished!", Toast.LENGTH_SHORT).show();
+                                }
 
-                                                                                                                          }
-                                                                                                                      });
+                        }
+                        });
 
-                                                                                                                      ((LinearLayout) findViewById(R.id.tasks)).addView(deadline);
-                                                                                                                  }
-                                                                                                              }
-                                                                                                          }
-                                                                                                      } else {
-                                                                                                          TextView text = new TextView(getApplicationContext());
-                                                                                                          text.setText("You have no tasks today");
-                                                                                                          ((LinearLayout) findViewById(R.id.tasks)).addView(text);
-                                                                                                      }
+                                ((LinearLayout) findViewById(R.id.tasks)).addView(deadline);
+                            }
+                        }
+                    }
+                } else {
+                    TextView text = new TextView(getApplicationContext());
+                    text.setText("You have no tasks today");
+                    ((LinearLayout) findViewById(R.id.tasks)).addView(text);
+                }
 
-                                                                                                      if (dataSnapshot.child("habits").exists()) {
-                                                                                                          DataSnapshot habits = dataSnapshot.child("habits");
+                if (dataSnapshot.child("habits").exists()) {
+                    DataSnapshot habits = dataSnapshot.child("habits");
+                    boolean done = false;
+                    for (final DataSnapshot type : habits.getChildren()) {
 
-                                                                                                          for (final DataSnapshot type : habits.getChildren()) {
+                        for (final DataSnapshot habit : type.getChildren()) {
+                            final Date now = Calendar.getInstance().getTime();
+                            Date last = new Date(now.getYear() - 1, now.getMonth(), now.getDay());
+                            final int span = type.getKey().equalsIgnoreCase("daily") ? 1 : type.getKey().equalsIgnoreCase("weekly") ? 7 : 30;
 
-                                                                                                              for (final DataSnapshot habit : type.getChildren()) {
-                                                                                                                  final Date now = Calendar.getInstance().getTime();
-                                                                                                                  Date last = new Date(now.getYear() - 1, now.getMonth(), now.getDay());
-                                                                                                                  final int span = type.getKey().equalsIgnoreCase("daily") ? 1 : type.getKey().equalsIgnoreCase("weekly") ? 7 : 30;
+                            if (habit.hasChild("last")) {
+                                try {
+                                last = new SimpleDateFormat("dd-MM-yyyy").parse(habit.child("last").getValue().toString());
+                                } catch (Exception e) {}
+                            }
 
-                                                                                                                  if (habit.hasChild("last")) {
-                                                                                                                      try {
-                                                                                                                          last = new SimpleDateFormat("dd-MM-yyyy").parse(habit.child("last").getValue().toString());
-                                                                                                                      }catch (Exception e){
+                            if (TimeUnit.DAYS.convert(now.getTime() - last.getTime(), TimeUnit.MILLISECONDS) > span) {
 
-                                                                                                                      }
-                                                                                                                  }
-
-                                                                                                                  if (TimeUnit.DAYS.convert(now.getTime() - last.getTime(), TimeUnit.MILLISECONDS) > span) {
-
-
-                                                                                                                      firebase.child("users/"
-                                                                                                                              + firebase.getAuth().getUid()
-                                                                                                                              + "/habits/"
-                                                                                                                              + type.getKey()+"/"+habit.getKey()+"/done").setValue("false");
+                                firebase.child("users/"
+                                        + firebase.getAuth().getUid()
+                                        + "/habits/"
+                                        + type.getKey() + "/" + habit.getKey() + "/done").setValue("false");
 
 
-                                                                                                                      View deadline = LayoutInflater.from(getApplicationContext()).inflate(R.layout.deadline, null);
+                                View deadline = LayoutInflater.from(getApplicationContext()).inflate(R.layout.deadline, null);
 
-                                                                                                                      ((TextView) deadline.findViewWithTag("text")).setText(habit.getKey());
-                                                                                                                      ((CheckBox) deadline.findViewWithTag("check")).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                                                                                          @Override
-                                                                                                                          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                                                                                              if (isChecked) {
+                                ((TextView) deadline.findViewWithTag("text")).setText(habit.getKey());
+                                ((CheckBox) deadline.findViewWithTag("check")).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                        if (isChecked) {
 
-                                                                                                                                  String last = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
-                                                                                                                                  int streak = Integer.parseInt(habit.child("streak").getValue().toString()) + 1;
-                                                                                                                                  int best = Integer.parseInt(habit.child("best").getValue().toString());
+                                            String last = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+                                            int streak = Integer.parseInt(habit.child("streak").getValue().toString()) + 1;
+                                            int best = Integer.parseInt(habit.child("best").getValue().toString());
 
-                                                                                                                                  if(best < streak) best = streak;
+                                            if (best < streak)
+                                                best = streak;
 
-                                                                                                                                  Map<String,Object> habitV = new HashMap<String, Object>();
-                                                                                                                                  habitV.put("last", last);
-                                                                                                                                  habitV.put("best", best);
-                                                                                                                                  habitV.put("streak", streak);
-                                                                                                                                  habitV.put("done", true);
+                                            Map<String, Object> habitV = new HashMap<String, Object>();
+                                            habitV.put("last", last);
+                                            habitV.put("best", best);
+                                            habitV.put("streak", streak);
+                                            habitV.put("done", true);
 
-                                                                                                                                  firebase.child("users/"
-                                                                                                                                          + firebase.getAuth().getUid()
-                                                                                                                                          + "/habits/"
-                                                                                                                                          + type.getKey()+"/"+habit.getKey())
-                                                                                                                                          .updateChildren(habitV);
+                                            firebase.child("users/"
+                                                    + firebase.getAuth().getUid()
+                                                    + "/habits/"
+                                                    + type.getKey() + "/" + habit.getKey())
+                                                    .updateChildren(habitV);
 
-                                                                                                                                  int point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());
+                                            int point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());
 
-                                                                                                                                  firebase.child("users/"
-                                                                                                                                          + firebase.getAuth().getUid()
-                                                                                                                                          + "/point").setValue(point+streak*10);
+                                            firebase.child("users/"
+                                                    + firebase.getAuth().getUid()
+                                                    + "/point").setValue(point + streak * 10);
 
 
-                                                                                                                                  buttonView.setEnabled(false);
-                                                                                                                                  Toast.makeText(HomeActivity.this, "Habit finished!", Toast.LENGTH_SHORT).show();                                        }
+                                            buttonView.setEnabled(false);
+                                            Toast.makeText(HomeActivity.this, "Habit finished!", Toast.LENGTH_SHORT).show();
+                                        }
 
-                                                                                                                          }
-                                                                                                                      });
+                                    }
+                                });
+                                done = true;
+                                ((LinearLayout) findViewById(R.id.habits)).addView(deadline);
+                            }
 
-                                                                                                                      ((LinearLayout) findViewById(R.id.tasks)).addView(deadline);
-                                                                                                                  }
+                        }
+                    }
+                    if(!done){
 
-                                                                                                              }
-                                                                                                          }
+
+                        TextView text = new TextView(getApplicationContext());
+                        text.setText("You have no habits today");
+                        ((LinearLayout) findViewById(R.id.habits)).addView(text);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            Toast.makeText(HomeActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            }
+
+        );
 //                        if (habits.hasChild(date)) {
 //                            DataSnapshot today = habits.child(date);
 //                            for (final DataSnapshot task : today.getChildren()) {
@@ -238,12 +285,6 @@ public class HomeActivity extends AppCompatActivity
 //                                }
 //                            }
 //                        }
-                                                                                                      }else{
-
-                                                                                                          TextView text = new TextView(getApplicationContext());
-                                                                                                          text.setText("You have no habits today");
-                                                                                                          ((LinearLayout) findViewById(R.id.habits)).addView(text);
-                                                                                                      }
 
 //                for (DataSnapshot ds : dataSnapshot.getChildren()) {
 //                    if (ds.exists()
@@ -260,21 +301,10 @@ public class HomeActivity extends AppCompatActivity
 //                    }
 //                }
 
-                                                                                                  }
-
-                                                                                                  @Override
-                                                                                                  public void onCancelled (FirebaseError firebaseError){
-                                                                                                      Toast.makeText(HomeActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                                  }
-                                                                                              }
-
-        );
-
-
     }
 
     @Override
-    public void onBackPressed () {
+    public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -284,14 +314,14 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu (Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -307,7 +337,7 @@ public class HomeActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected (MenuItem item){
+    public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -326,7 +356,7 @@ public class HomeActivity extends AppCompatActivity
             firebase.unauth();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
-        }else if (id == R.id.nav_achievements) {
+        } else if (id == R.id.nav_achievements) {
             Toast.makeText(HomeActivity.this, "Opening achievement..", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), AchievementActivity.class));
 
