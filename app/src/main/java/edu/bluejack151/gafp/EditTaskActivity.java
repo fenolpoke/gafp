@@ -44,8 +44,11 @@ public class EditTaskActivity extends AppCompatActivity {
                 TextView descriptionEditText = (TextView)findViewById(R.id.descriptionEditText);
                 DatePicker dp = (DatePicker)findViewById(R.id.datePicker2);
 
-                Date d = new Date(date);
 
+                Date d = null;
+                try {
+                    d = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+                }catch(Exception e){}
                 titleEditText.setText(dataSnapshot.getKey());
                 descriptionEditText.setText(dataSnapshot.child("description").getValue().toString());
                 dp.init(d.getYear(), d.getMonth(), d.getDay(), new DatePicker.OnDateChangedListener() {

@@ -39,27 +39,45 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ArrayList<String> avatars = new ArrayList<String>();
-                int pos = 0;
+                ArrayList<String> themes = new ArrayList<String>();
+                int posAvatar = 0;
+                int posTheme = 0;
 
-                for(DataSnapshot avatar : dataSnapshot.child("avatars").getChildren()){
+                for(DataSnapshot avatar : dataSnapshot.child("avatar").getChildren()){
                     avatars.add(avatar.getKey());
                     if(!avatar.getValue().toString().equalsIgnoreCase("true")){
-                        pos++;
+                        posAvatar++;
                     }
                 }
 
-                ArrayAdapter<String> adapter =
+                for(DataSnapshot theme : dataSnapshot.child("themes").getChildren()){
+                    avatars.add(theme.getKey());
+                    if(!theme.getValue().toString().equalsIgnoreCase("true")){
+                        posTheme++;
+                    }
+                }
+
+                ArrayAdapter<String> adapterAvatar =
                         new ArrayAdapter<String>(
                                 getApplicationContext(),
                                 R.layout.support_simple_spinner_dropdown_item,
                                 avatars
                         );
 
+                ArrayAdapter<String> adapterTheme =
+                        new ArrayAdapter<String>(
+                                getApplicationContext(),
+                                R.layout.support_simple_spinner_dropdown_item,
+                                themes
+                        );
+
                 Spinner avatarSpinner = (Spinner) findViewById(R.id.avatarSpinner);
+                Spinner themeSpinner = (Spinner) findViewById(R.id.themeSpinner);
 
-                avatarSpinner.setAdapter(adapter);
-                avatarSpinner.setSelection(pos);
-
+                avatarSpinner.setAdapter(adapterAvatar);
+                avatarSpinner.setSelection(posAvatar);
+                themeSpinner.setAdapter(adapterTheme);
+                themeSpinner.setSelection(posTheme);
             }
 
             @Override
@@ -75,7 +93,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void editProfile(View view){
         Toast.makeText(EditProfileActivity.this, "Editing profile...", Toast.LENGTH_SHORT).show();
-
 
         final EditText password = (EditText) findViewById(R.id.passwordEditText);
         EditText confirm = (EditText) findViewById(R.id.confirmPasswordEditText);
@@ -104,16 +121,21 @@ public class EditProfileActivity extends AppCompatActivity {
                     Spinner sp = (Spinner)findViewById(R.id.avatarSpinner);
 
                     Map<String, Object> avatars = new HashMap<String, Object>();
+                    Map<String, Object> themes = new HashMap<String, Object>();
 
-                    for (DataSnapshot avatar : dataSnapshot.child("avatars").getChildren()) {
+                    for (DataSnapshot avatar : dataSnapshot.child("avatar").getChildren()) {
                         avatars.put(avatar.getKey(), (sp.getSelectedItem().toString() == avatar.getKey()) ? true : false);
+                    }
+                    for (DataSnapshot theme : dataSnapshot.child("themes").getChildren()) {
+                        themes.put(theme.getKey(), (sp.getSelectedItem().toString() == theme.getKey()) ? true : false);
                     }
 
 
                     Map<String, Object> user = new HashMap<String, Object>();
                     user.put("username", username.getText().toString());
                     user.put("password", username.getText().toString());
-                    user.put("avatars", avatars);
+                    user.put("avatar", avatars);
+                    user.put("themes", themes);
 
                     firebase.child("users/"+firebase.getAuth().getUid()).updateChildren(user);
 

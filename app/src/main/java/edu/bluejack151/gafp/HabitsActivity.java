@@ -69,6 +69,16 @@ public class HabitsActivity extends AppCompatActivity {
                             cb.setChecked(true);
                         }else {
 
+
+                            ((TextView) habitL.findViewWithTag("title")).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(getApplicationContext(), EditHabitActivity.class);
+                                    i.putExtra("type", type.getKey());
+                                    i.putExtra("title", habit.getKey());
+                                    startActivity(i);
+                                }
+                            });
                             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

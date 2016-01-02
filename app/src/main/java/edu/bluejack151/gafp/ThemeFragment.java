@@ -1,12 +1,16 @@
 package edu.bluejack151.gafp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +20,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
 
 /**
@@ -74,6 +82,28 @@ public class ThemeFragment extends Fragment {
         firebase.setAndroidContext(getActivity().getApplicationContext());
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
 
+        final Vector<Integer> userMoney = new Vector<Integer>();
+        final Vector<String> userOwnedTheme = new Vector<String>();
+
+        firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Toast.makeText(getActivity().getApplicationContext(), dataSnapshot.getChildrenCount() + "", Toast.LENGTH_LONG).show();
+
+                userMoney.add(Integer.parseInt(dataSnapshot.child("money").getValue().toString()));
+                DataSnapshot ownedTheme = dataSnapshot.child("themes");
+                for (final DataSnapshot theme : ownedTheme.getChildren()) {
+                    userOwnedTheme.add(theme.getKey().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
         firebase.child("shops/themes").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,14 +115,75 @@ public class ThemeFragment extends Fragment {
                     TextView thPrice = (TextView) layoutTheme.findViewById(R.id.themePrice);
                     ImageView thImage = (ImageView) layoutTheme.findViewById(R.id.themeImageView);
 
-                    String title = theme.child("name").getValue().toString();
-                    String price = theme.child("price").getValue().toString();
-                    String imageName = theme.getKey().toString();
+                    final String title = theme.child("name").getValue().toString();
+                    final String price = theme.child("price").getValue().toString();
+                    final String imageName = theme.getKey().toString();
 
                     int avaID = getResources().getIdentifier(imageName, "drawable", getActivity().getPackageName());
                     thImage.setImageResource(avaID);
                     thPrice.setText(price);
                     thTitle.setText(title);
+
+                    Button btnPurchase = (Button) layoutTheme.findViewById(R.id.btnPurchaseTheme);
+                    btnPurchase.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                       //     Toast.makeText(getActivity().getApplicationContext(), "Purchase " + v.getId(), Toast.LENGTH_LONG).show();
+
+                            LayoutInflater inflater = getActivity().getLayoutInflater();
+                            View alertPurchaseLayout = inflater.inflate(R.layout.popup_confirmation, null);
+                            //Button purchase = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpPurchase);
+                            // Button cancel = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpCancel);
+
+                            final AlertDialog.Builder alertPurchase = new AlertDialog.Builder(getActivity().getApplicationContext());
+                            alertPurchase.setView(alertPurchaseLayout);
+
+                            int cancelBtnID = getResources().getIdentifier("btnPopUpCancel", "id", getActivity().getPackageName());
+                            int purchaseBtnID = getResources().getIdentifier("btnPopUpPurchase", "id", getActivity().getPackageName());
+                            alertPurchase.setNegativeButton(cancelBtnID, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Purchase canceled", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            alertPurchase.setPositiveButton(purchaseBtnID, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Integer money = userMoney.get(0);
+                                    Integer purchasePrice = Integer.parseInt(price);
+                                    if (money > purchasePrice) {
+                                        money -= purchasePrice;
+                                        Map<String, Object> updateMoney = new HashMap<String, Object>();
+                                        updateMoney.put("money", money);
+                                        firebase.child("users/" + firebase.getAuth().getUid()).updateChildren(updateMoney);
+
+                                        //add
+                                        Map<String, Object> addNewTheme = new HashMap<String, Object>();
+                                        addNewTheme.put(imageName,true);
+                                        firebase.child("users/" + firebase.getAuth().getUid()+"/themes").updateChildren(addNewTheme);
+
+                                        Toast.makeText(getActivity().getApplicationContext(), "Thank you for purchasing", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(getActivity().getApplicationContext(), "More money is required", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+
+                            alertPurchase.setTitle("Purchase Item");
+                            AlertDialog dialog = alertPurchase.create();
+                            dialog.show();
+                        }
+                    });
+
+                    if (userOwnedTheme.contains(imageName)) {
+                        btnPurchase.setText("PURCHASED");
+                        btnPurchase.setEnabled(false);
+                        btnPurchase.setBackgroundColor(Color.GRAY);
+                    } else {
+
+                    }
+
 
                     ((LinearLayout) getActivity().findViewById(R.id.themeLinearLayout)).addView(layoutTheme);
                 }

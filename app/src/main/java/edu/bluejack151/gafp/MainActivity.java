@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-//        loginManager = LoginManager.getInstance();
+        //loginManager = LoginManager.getInstance();
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_main);
 
@@ -57,23 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (!checkFacebookUser()) {
             LoginManager.getInstance().logOut();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
 
-        firebase.addAuthStateListener(new Firebase.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(AuthData authData) {
-                if (authData != null) {
-                    Toast.makeText(MainActivity.this, "Succesfully logged in!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                }
-//
-//              else{
-//                    Toast.makeText(MainActivity.this, "Failed to log in!", Toast.LENGTH_SHORT).show();
-//                }
-            }
-        });
+        if (firebase.getAuth() != null) {
+            Toast.makeText(MainActivity.this, "Succesfully logged in!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        }
 
         facebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -81,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this, "Login with facebook succeeded!", Toast.LENGTH_SHORT).show();
 
-                if(!checkFacebookUser()){
+                if (!checkFacebookUser()) {
                     Toast.makeText(MainActivity.this, "Creating user..", Toast.LENGTH_SHORT).show();
 
                     GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
@@ -102,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
 
                             final String finalEmail = email;
-                            firebase.createUser(email, "", new Firebase.ResultHandler() {
+                            firebase.createUser(email, loginResult.getAccessToken().getUserId(), new Firebase.ResultHandler() {
                                 @Override
                                 public void onSuccess() {
                                     try {
                                         Toast.makeText(MainActivity.this, "Authenticating...", Toast.LENGTH_SHORT).show();
-                                        firebase.authWithPassword(object.getString("email"), "", new Firebase.AuthResultHandler() {
+                                        firebase.authWithPassword(finalEmail, loginResult.getAccessToken().getUserId(), new Firebase.AuthResultHandler() {
                                             @Override
                                             public void onAuthenticated(AuthData authData) {
                                                 if (authData != null) {
@@ -141,21 +132,20 @@ public class MainActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onAuthenticationError(FirebaseError firebaseError) {
-                                                Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainActivity.this, "mapping : " + firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     } catch (Exception e) {
-                                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "creating user : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
                                 public void onError(FirebaseError firebaseError) {
 
-                                    Toast.makeText(MainActivity.this, firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "main : " + firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
-
 
 
                         }
@@ -207,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    boolean checkFacebookUser(){
+    boolean checkFacebookUser() {
 
         if (Profile.getCurrentProfile() != null) return false;
 
@@ -244,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
         return false;
     }
+
     public void login(View view) {
         Toast.makeText(MainActivity.this, "Loggin in...", Toast.LENGTH_SHORT).show();
 
@@ -283,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
                         if (authData != null) {
                             Toast.makeText(MainActivity.this, "Authenticated!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+
                         }
                     }
 
@@ -296,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openRegister(View view) {
         startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+
     }
 
 }

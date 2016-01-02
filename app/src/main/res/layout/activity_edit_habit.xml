@@ -9,86 +9,97 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.bluejack151.gafp.EditHabitActivity">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/titleEditText"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp"
-        android:hint="title" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:gravity="center"
-        android:lines="4"
-        android:id="@+id/descriptionEditText"
-        android:layout_below="@+id/titleEditText"
-        android:layout_centerHorizontal="true"
-        android:hint="description" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Type"
-        android:id="@+id/textView16"
-        android:gravity="center"
-        android:layout_below="@+id/descriptionEditText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_below="@+id/textView16"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" >
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Daily"
-            android:id="@+id/dailyRadioButton"
-            android:onClick="day" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Weekly"
-            android:id="@+id/weeklyRadioButton"
-            android:onClick="week" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Monthly"
-            android:id="@+id/monthlyRadioButton"
-            android:onClick="month"
-            android:nestedScrollingEnabled="false" />
-    </RadioGroup>
-
-    <ImageButton
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editImageButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="ed" />
+        android:id="@+id/scrollView4" >
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/deleteImageButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="del" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/titleEditText"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="44dp"
+                android:hint="title" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:gravity="center"
+                android:lines="4"
+                android:id="@+id/descriptionEditText"
+                android:layout_below="@+id/titleEditText"
+                android:layout_centerHorizontal="true"
+                android:hint="description" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Type"
+                android:id="@+id/textView16"
+                android:gravity="center"
+                android:layout_below="@+id/descriptionEditText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_below="@+id/textView16"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" >
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Daily"
+                    android:id="@+id/dailyRadioButton"
+                    android:onClick="day" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekly"
+                    android:id="@+id/weeklyRadioButton"
+                    android:onClick="week" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monthly"
+                    android:id="@+id/monthlyRadioButton"
+                    android:onClick="month"
+                    android:nestedScrollingEnabled="false" />
+            </RadioGroup>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editImageButton"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:onClick="ed" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/deleteImageButton"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:onClick="del" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

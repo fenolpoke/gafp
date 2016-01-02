@@ -9,7 +9,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +59,32 @@ public class AddHabitActivity extends AppCompatActivity {
                 Map<String, Object> data = new HashMap<String, Object>();
                 data.put(((EditText)findViewById(R.id.titleEditText)).getText().toString(),values);
 
-
                 firebase.child("users/"+firebase.getAuth().getUid()+"/habits/"+type).updateChildren(data);
+
+                firebase.child("users/"+firebase.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        DataSnapshot userPoint = dataSnapshot.child("point");
+                        DataSnapshot userMoney = dataSnapshot.child("money");
+
+                        Integer currentPoint = Integer.parseInt(userPoint.getValue().toString());
+                        Integer currentMoney = Integer.parseInt(userMoney.getValue().toString());
+                        currentPoint += 10;
+                        currentMoney += 5;
+
+                        final Map<String, Object> newPoint = new HashMap<String, Object>();
+                        final Map<String, Object> newMoney = new HashMap<String, Object>();
+                        newPoint.put("point", currentPoint);
+                        newMoney.put("money", currentMoney);
+
+                        firebase.child("users/" + firebase.getAuth().getUid()).updateChildren(newPoint);
+                        firebase.child("users/" + firebase.getAuth().getUid()).updateChildren(newMoney);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                    }
+                });
 
                 Toast.makeText(AddHabitActivity.this, "Habit Added!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(),HabitsActivity.class));

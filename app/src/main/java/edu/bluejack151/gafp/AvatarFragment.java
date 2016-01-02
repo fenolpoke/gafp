@@ -1,10 +1,13 @@
 package edu.bluejack151.gafp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 
@@ -77,12 +82,16 @@ public class AvatarFragment extends Fragment {
         firebase.setAndroidContext(getActivity().getApplicationContext());
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
 
+        final Vector<Integer> userMoney = new Vector<Integer>();
         final Vector<String> userOwnedAvatar = new Vector<String>();
+
         firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Toast.makeText(getActivity().getApplicationContext(), dataSnapshot.getChildrenCount() + "", Toast.LENGTH_LONG).show();
+
+                userMoney.add(Integer.parseInt(dataSnapshot.child("money").getValue().toString()));
                 DataSnapshot ownedAvatar = dataSnapshot.child("avatar");
                 for (final DataSnapshot avatar : ownedAvatar.getChildren()) {
                     userOwnedAvatar.add(avatar.getKey().toString());
@@ -97,7 +106,7 @@ public class AvatarFragment extends Fragment {
 
         firebase.child("shops/avatar").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
 
                 Toast.makeText(getActivity().getApplicationContext(), dataSnapshot.getChildrenCount() + "", Toast.LENGTH_LONG).show();
                 for (final DataSnapshot avatar : dataSnapshot.getChildren()) {
@@ -106,9 +115,9 @@ public class AvatarFragment extends Fragment {
                     TextView avPrice = (TextView) layoutAvatar.findViewById(R.id.avatarPrice);
                     ImageView avImage = (ImageView) layoutAvatar.findViewById(R.id.avatarImageShop);
 
-                    String title = avatar.child("name").getValue().toString();
-                    String price = avatar.child("price").getValue().toString();
-                    String imageName = avatar.getKey().toString();
+                    final String title = avatar.child("name").getValue().toString();
+                    final String price = avatar.child("price").getValue().toString();
+                    final String imageName = avatar.getKey().toString();
 
                     int avaID = getResources().getIdentifier(imageName, "drawable", getActivity().getPackageName());
                     avImage.setImageResource(avaID);
@@ -119,7 +128,52 @@ public class AvatarFragment extends Fragment {
                     btnPurchase.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getActivity().getApplicationContext(),"Purchased "+v.getId(),Toast.LENGTH_LONG).show();
+                       //     Toast.makeText(getActivity().getApplicationContext(), "Purchase " + v.getId(), Toast.LENGTH_LONG).show();
+
+                            LayoutInflater inflater = getActivity().getLayoutInflater();
+                            View alertPurchaseLayout = inflater.inflate(R.layout.popup_confirmation, null);
+                            //Button purchase = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpPurchase);
+                           // Button cancel = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpCancel);
+
+                            final AlertDialog.Builder alertPurchase = new AlertDialog.Builder(getActivity().getApplicationContext());
+                            alertPurchase.setView(alertPurchaseLayout);
+
+                            int cancelBtnID = getResources().getIdentifier("btnPopUpCancel", "id", getActivity().getPackageName());
+                            int purchaseBtnID = getResources().getIdentifier("btnPopUpPurchase", "id", getActivity().getPackageName());
+                            alertPurchase.setNegativeButton(cancelBtnID, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Purchase canceled", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            alertPurchase.setPositiveButton(purchaseBtnID, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Integer money = userMoney.get(0);
+                                    Integer purchasePrice = Integer.parseInt(price);
+                                    if (money > purchasePrice) {
+                                        money -= purchasePrice;
+                                        Map<String, Object> updateMoney = new HashMap<String, Object>();
+                                        updateMoney.put("money", money);
+                                        firebase.child("users/" + firebase.getAuth().getUid()).updateChildren(updateMoney);
+
+                                        //add
+                                        Map<String, Object> addNewAvatar = new HashMap<String, Object>();
+                                        addNewAvatar.put(imageName,true);
+                                        firebase.child("users/" + firebase.getAuth().getUid()+"/avatar").updateChildren(addNewAvatar);
+
+
+                                        Toast.makeText(getActivity().getApplicationContext(), "Thank you for purchasing", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(getActivity().getApplicationContext(), "More money is required", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+
+                            alertPurchase.setTitle("Purchase Item");
+                            AlertDialog dialog = alertPurchase.create();
+                            dialog.show();
                         }
                     });
 

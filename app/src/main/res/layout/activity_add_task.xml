@@ -9,51 +9,72 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.bluejack151.gafp.AddTaskActivity">
 
-    <include
+
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        layout="@layout/title_layout"
-        android:id="@+id/include" />
+        android:id="@+id/scrollView5" >
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/titleEditText"
-        android:layout_alignTop="@+id/include"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:hint="title" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/descriptionEditText"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:lines="3"
-        android:layout_below="@+id/titleEditText"
-        android:hint="description" />
+            <include
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                layout="@layout/title_layout"
+                android:id="@+id/include" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/titleEditText"
+                android:layout_alignTop="@+id/include"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:hint="title" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/descriptionEditText"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Deadline"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:id="@+id/DeadlineText" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/descriptionEditText"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:lines="3"
+                android:layout_below="@+id/titleEditText"
+                android:hint="description" />
 
-    <DatePicker
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/datePicker"
-        android:layout_below="@+id/DeadlineText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/descriptionEditText"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Deadline"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:id="@+id/DeadlineText" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/editText"
+                android:layout_alignTop="@+id/DeadlineText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <DatePicker
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/datePicker"
+                android:layout_below="@+id/DeadlineText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

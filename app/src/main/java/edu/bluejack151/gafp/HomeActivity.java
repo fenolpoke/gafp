@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 public class HomeActivity extends AppCompatActivity
@@ -56,6 +58,26 @@ public class HomeActivity extends AppCompatActivity
         alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(getApplicationContext(), MainBootReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, i, 0);
+
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+//        DataSnapshot ds = new DataSnapshot(firebase, )
+//                firebase.child("users/"+firebase.getAuth().getAuth().get("name")+"/tasks");
+
+
+        Firebase.setAndroidContext(getApplicationContext());
+        firebase = new Firebase("https://tpa-gap.firebaseio.com/");
+
+        final Vector<String> newRank = new Vector<String>();
 
         firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -80,32 +102,39 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-//        DataSnapshot ds = new DataSnapshot(firebase, )
-//                firebase.child("users/"+firebase.getAuth().getAuth().get("name")+"/tasks");
-
-
-        Firebase.setAndroidContext(getApplicationContext());
-        firebase = new Firebase("https://tpa-gap.firebaseio.com/");
-
         firebase.child("users/" + firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 final String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
 
                 String name = dataSnapshot.hasChild("username") ? dataSnapshot.child("username").getValue().toString() : "User";
-                String rank = dataSnapshot.child("rank").getValue().toString();
-                String nextLevel = dataSnapshot.child("point").getValue().toString();
+
+                //rank
+                final String rank = dataSnapshot.child("rank").getValue().toString();
+                final String nextLevel = dataSnapshot.child("point").getValue().toString();
+                firebase.child("rank").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot rankChild : dataSnapshot.getChildren())
+                        {
+                            Integer rankPoint = Integer.parseInt(rankChild.getValue().toString());
+                            Integer currPoint = Integer.parseInt(nextLevel);
+                            if(currPoint < rankPoint){
+                                newRank.add(rankChild.getKey().toString());
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+
+
+
                 String money = dataSnapshot.child("money").getValue().toString();
 
+                //setAvatar
                 ImageView avatar = (ImageView) findViewById(R.id.avatarImageView);
                 DataSnapshot ava = dataSnapshot.child("avatar");
                 String avatarString = "";
@@ -116,7 +145,20 @@ public class HomeActivity extends AppCompatActivity
                     }
                 }
                 int avaID = getResources().getIdentifier(avatarString, "drawable", getPackageName());
-                avatar.setImageResource(avaID);
+                if(avatar != null) avatar.setImageResource(avaID);
+
+                //setBackground
+                RelativeLayout homeLayout = (RelativeLayout) findViewById(R.id.homeLayout);
+                DataSnapshot the = dataSnapshot.child("themes");
+                String themeString = "";
+                for (final DataSnapshot activeTheme : the.getChildren()) {
+                    if (activeTheme.getValue() == true) {
+                        themeString = activeTheme.getKey().toString();
+                        break;
+                    }
+                }
+                int theID = getResources().getIdentifier(themeString, "drawable", getPackageName());
+                if(homeLayout != null) homeLayout.setBackgroundResource(theID);
 
                 TextView usernameText = (TextView) findViewById(R.id.usernameTextView);
                 TextView rankText = (TextView) findViewById(R.id.rankTextView);
@@ -124,7 +166,7 @@ public class HomeActivity extends AppCompatActivity
                 TextView moneyText = (TextView) findViewById(R.id.moneyTextView);
 
                 usernameText.setText(name);
-                rankText.setText(rank);
+                rankText.setText(newRank.get(0));
                 nextlevelText.setText("Points : " + nextLevel);
                 moneyText.setText(money);
 
@@ -354,6 +396,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_log_out) {
             Toast.makeText(HomeActivity.this, "Logging out..", Toast.LENGTH_SHORT).show();
             firebase.unauth();
+            Toast.makeText(HomeActivity.this, "logged out", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
         } else if (id == R.id.nav_achievements) {

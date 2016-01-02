@@ -9,54 +9,65 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.bluejack151.gafp.EditTaskActivity">
 
-    <EditText
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/titleEditText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:hint="title" />
+        android:id="@+id/scrollView6" >
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/descriptionEditText"
-        android:layout_below="@+id/titleEditText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/titleEditText"
-        android:layout_alignEnd="@+id/titleEditText"
-        android:hint="description" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <DatePicker
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/datePicker2"
-        android:layout_below="@+id/descriptionEditText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/titleEditText"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:hint="title" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editImageButton"
-        android:layout_alignBottom="@+id/datePicker2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:nestedScrollingEnabled="false"
-        android:onClick="edit" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/descriptionEditText"
+                android:layout_below="@+id/titleEditText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignRight="@+id/titleEditText"
+                android:layout_alignEnd="@+id/titleEditText"
+                android:hint="description" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/deleteImageButton"
-        android:layout_alignBottom="@+id/datePicker2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="delete" />
+            <DatePicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/datePicker2"
+                android:layout_below="@+id/descriptionEditText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editImageButton"
+                android:layout_alignBottom="@+id/datePicker2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:nestedScrollingEnabled="false"
+                android:onClick="edit" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/deleteImageButton"
+                android:layout_alignBottom="@+id/datePicker2"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:onClick="delete" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
