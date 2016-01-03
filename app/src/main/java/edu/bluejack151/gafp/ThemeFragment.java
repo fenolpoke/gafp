@@ -140,14 +140,14 @@ public class ThemeFragment extends Fragment {
 
                             int cancelBtnID = getResources().getIdentifier("btnPopUpCancel", "id", getActivity().getPackageName());
                             int purchaseBtnID = getResources().getIdentifier("btnPopUpPurchase", "id", getActivity().getPackageName());
-                            alertPurchase.setNegativeButton(cancelBtnID, new DialogInterface.OnClickListener() {
+                            alertPurchase.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Toast.makeText(getActivity().getApplicationContext(), "Purchase canceled", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
-                            alertPurchase.setPositiveButton(purchaseBtnID, new DialogInterface.OnClickListener() {
+                            alertPurchase.setPositiveButton("Purchase", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Integer money = userMoney.get(0);

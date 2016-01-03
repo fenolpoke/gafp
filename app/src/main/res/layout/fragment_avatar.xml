@@ -17,9 +17,6 @@
             android:id="@+id/avatarLinearLayout"
             >
 
-            <include layout="@layout/avatar_layout"
-                android:id="@+id/avatarLayout"
-                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

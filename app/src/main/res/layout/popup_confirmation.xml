@@ -14,29 +14,34 @@
         android:layout_margin="20dp"
         android:id="@+id/textView14" />
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:background="@drawable/btn_roundedrect"
             android:layout_gravity="left"
-            android:layout_margin="10dp"
             android:text="PURCHASE"
-            android:id="@+id/btnPopUpPurchase" />
+            android:id="@+id/btnPopUpPurchase"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:background="@drawable/btn_roundedrect"
             android:layout_gravity="right"
-            android:layout_margin="10dp"
             android:text="CANCEL"
-            android:id="@+id/btnPopUpCancel" />
-    </LinearLayout>
+            android:id="@+id/btnPopUpCancel"
+            android:layout_alignTop="@+id/btnPopUpPurchase"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 </LinearLayout>
