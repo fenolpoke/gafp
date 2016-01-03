@@ -61,14 +61,14 @@ public class AddHabitActivity extends AppCompatActivity {
 
                 firebase.child("users/"+firebase.getAuth().getUid()+"/habits/"+type).updateChildren(data);
 
-                firebase.child("users/"+firebase.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+                firebase.child("users/"+firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         DataSnapshot userPoint = dataSnapshot.child("point");
                         DataSnapshot userMoney = dataSnapshot.child("money");
 
-                        Integer currentPoint = Integer.parseInt(userPoint.getValue().toString());
-                        Integer currentMoney = Integer.parseInt(userMoney.getValue().toString());
+                        Integer currentPoint = Integer.parseInt(dataSnapshot.hasChild("point") ? userPoint.getValue().toString() : "0");
+                        Integer currentMoney = Integer.parseInt(dataSnapshot.hasChild("money") ?userMoney.getValue().toString() : "0");
                         currentPoint += 10;
                         currentMoney += 5;
 
@@ -87,7 +87,8 @@ public class AddHabitActivity extends AppCompatActivity {
                 });
 
                 Toast.makeText(AddHabitActivity.this, "Habit Added!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(),HabitsActivity.class));
+//                startActivity(new Intent(getApplicationContext(),HabitsActivity.class));
+                finish();
             }
         });
 

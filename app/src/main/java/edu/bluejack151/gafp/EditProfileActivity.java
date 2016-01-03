@@ -51,12 +51,18 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
 
                 for(DataSnapshot theme : dataSnapshot.child("themes").getChildren()){
-                    avatars.add(theme.getKey());
+                    themes.add(theme.getKey());
                     if(!theme.getValue().toString().equalsIgnoreCase("true")){
                         posTheme++;
                     }
                 }
 
+                if (avatars.isEmpty()){
+                    avatars.add("default");
+                }
+                if(themes.isEmpty()){
+                    themes.add("default");
+                }
                 ArrayAdapter<String> adapterAvatar =
                         new ArrayAdapter<String>(
                                 getApplicationContext(),
@@ -133,14 +139,31 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     Map<String, Object> user = new HashMap<String, Object>();
                     user.put("username", username.getText().toString());
-                    user.put("password", username.getText().toString());
+                    user.put("password", password.getText().toString());
                     user.put("avatar", avatars);
                     user.put("themes", themes);
+
+                    firebase.changePassword(
+                            dataSnapshot.child("email").getValue().toString(),
+                            dataSnapshot.child("password").getValue().toString(),
+                            password.getText().toString(),
+                            new Firebase.ResultHandler() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(EditProfileActivity.this, "Change password success!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError(FirebaseError firebaseError) {
+                            Toast.makeText(EditProfileActivity.this, "change fail: "+firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
                     firebase.child("users/"+firebase.getAuth().getUid()).updateChildren(user);
 
                     Toast.makeText(EditProfileActivity.this, "Edit profile success!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+//                    startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                    finish();
                 }
 
                 @Override

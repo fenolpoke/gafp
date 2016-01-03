@@ -44,7 +44,7 @@ public class AddTaskActivity extends AppCompatActivity {
         dp.init(1992, 2, 2, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Toast.makeText(AddTaskActivity.this, new SimpleDateFormat("dd-MM-yyyy").format(new Date(year,monthOfYear,dayOfMonth)), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTaskActivity.this, new SimpleDateFormat("dd-MM-yyyy").format(new Date(year-1900,monthOfYear,dayOfMonth)), Toast.LENGTH_SHORT).show();
             }
         });
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +65,7 @@ public class AddTaskActivity extends AppCompatActivity {
                 Date now = Calendar.getInstance().getTime();
 
                 DatePicker dp = (DatePicker) findViewById(R.id.datePicker);
-                Date deadline = new Date(dp.getYear(),dp.getMonth(),dp.getDayOfMonth());
+                Date deadline = new Date(dp.getYear()-1900,dp.getMonth(),dp.getDayOfMonth());
 
                 if(now.after(deadline)){
                     Toast.makeText(AddTaskActivity.this, "Deadline must be in the future!", Toast.LENGTH_SHORT).show();
@@ -87,8 +87,8 @@ public class AddTaskActivity extends AppCompatActivity {
                         DataSnapshot userPoint = dataSnapshot.child("point");
                         DataSnapshot userMoney = dataSnapshot.child("money");
 
-                        Integer currentPoint = Integer.parseInt(userPoint.getValue().toString());
-                        Integer currentMoney = Integer.parseInt(userMoney.getValue().toString());
+                        Integer currentPoint = Integer.parseInt(dataSnapshot.hasChild("point") ? userPoint.getValue().toString() : "0");
+                        Integer currentMoney = Integer.parseInt(dataSnapshot.hasChild("money") ? userMoney.getValue().toString() : "0");
                         currentPoint += 10;
                         currentMoney += 5;
 
@@ -108,7 +108,8 @@ public class AddTaskActivity extends AppCompatActivity {
                 });
 
                 Toast.makeText(AddTaskActivity.this, "Task Added!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+//                startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+                finish();
             }
         });
 

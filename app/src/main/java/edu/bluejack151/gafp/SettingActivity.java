@@ -40,6 +40,11 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void save(View view){
+
+        if(frequency == null) {
+            Toast.makeText(SettingActivity.this, "Pick time!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         firebase.child("users/"+firebase.getAuth().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -53,7 +58,8 @@ public class SettingActivity extends AppCompatActivity {
 
                 firebase.child("users/"+firebase.getAuth().getUid()).updateChildren(settings);
                 Toast.makeText(SettingActivity.this, "Edit setting success!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+//                startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                finish();
             }
 
             @Override
@@ -63,15 +69,15 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    public void one(View view){
-        frequency = "1";
+    public void eight(View view){
+        frequency = "8";
     }
 
     public void three(View view){
-        frequency = "3";
+        frequency = "15";
     }
     public void seven(View view){
-        frequency = "7";
+        frequency = "19";
 
     }
 

@@ -77,7 +77,7 @@ public class EditTaskActivity extends AppCompatActivity {
             Date now = Calendar.getInstance().getTime();
 
             DatePicker dp = (DatePicker) findViewById(R.id.datePicker2);
-            Date deadline = new Date(dp.getYear(),dp.getMonth(),dp.getDayOfMonth());
+            Date deadline = new Date(dp.getYear()-1900,dp.getMonth(),dp.getDayOfMonth());
 
             if(now.after(deadline)){
                 Toast.makeText(EditTaskActivity.this, "Deadline must be in the future!", Toast.LENGTH_SHORT).show();
@@ -98,7 +98,8 @@ public class EditTaskActivity extends AppCompatActivity {
                 firebase.child("users/"+firebase.getAuth().getUid()+"/tasks/"+date).updateChildren(data);
 
                 Toast.makeText(EditTaskActivity.this, "Task Edited!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+//                startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+                finish();
             }
         }
     }
@@ -108,7 +109,8 @@ public class EditTaskActivity extends AppCompatActivity {
         firebase.child("users/"+firebase.getAuth().getUid()+"/tasks/"+getIntent().getStringExtra("date")
                 +"/"+getIntent().getStringExtra("title")).removeValue();
         Toast.makeText(EditTaskActivity.this, "Task Deleted!", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+//        startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+        finish();
     }
 
 }

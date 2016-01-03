@@ -9,6 +9,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.bluejack151.gafp.EditTaskActivity">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editImageButton"
+        android:nestedScrollingEnabled="false"
+        android:onClick="edit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/scrollView6" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/deleteImageButton"
+        android:onClick="delete"
+        android:layout_below="@+id/scrollView6"
+        android:layout_alignRight="@+id/scrollView6"
+        android:layout_alignEnd="@+id/scrollView6" />
+
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,30 +63,15 @@
 
             <DatePicker
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:id="@+id/datePicker2"
                 android:layout_below="@+id/descriptionEditText"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editImageButton"
-                android:layout_alignBottom="@+id/datePicker2"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:nestedScrollingEnabled="false"
-                android:onClick="edit" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/deleteImageButton"
-                android:layout_alignBottom="@+id/datePicker2"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:onClick="delete" />
+                android:layout_alignParentStart="true"
+                android:datePickerMode="calendar" />
+
         </RelativeLayout>
     </ScrollView>
+
 </RelativeLayout>

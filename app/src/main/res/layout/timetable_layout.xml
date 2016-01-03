@@ -9,10 +9,11 @@
         android:layout_height="match_parent"
         android:columnCount="3"
         android:layout_margin="10dp"
-        android:rowCount="2">
+        android:rowCount="2"
+        android:background="#DDD">
 
         <TextView
-            android:layout_width="75dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="10"
@@ -24,7 +25,7 @@
             android:tag="remaining" />
 
         <TextView
-            android:layout_width="235dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Title Goes Here"
@@ -47,7 +48,7 @@
             android:tag="check" />
 
         <TextView
-            android:layout_width="75dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Days"

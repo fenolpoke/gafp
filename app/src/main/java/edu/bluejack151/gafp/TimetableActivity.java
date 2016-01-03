@@ -65,7 +65,7 @@ public class TimetableActivity extends AppCompatActivity {
 
                         View timetable = LayoutInflater.from(getApplicationContext()).inflate(R.layout.timetable_layout, null);
 
-                        ((TextView) timetable.findViewWithTag("remaining")).setText(remaining >= 0 ? remaining + "" : "-");
+                        ((TextView) timetable.findViewWithTag("remaining")).setText(remaining >= 0 ? (remaining + 1)+ "" : "-");
                         ((TextView) timetable.findViewWithTag("date")).setText(deadline.getKey());
                         ((TextView) timetable.findViewWithTag("title")).setText(task.getKey());
                         ((TextView) timetable.findViewWithTag("description")).setText(task.child("description").getValue().toString());
@@ -97,7 +97,7 @@ public class TimetableActivity extends AppCompatActivity {
                                                 + deadline.getKey() + "/" + task.getKey() + "/done")
                                                 .setValue(true);
 
-                                        int point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());
+                                        int point = Integer.parseInt(dataSnapshot.hasChild("point") ? dataSnapshot.child("point").getValue().toString() : "0");
 
                                         firebase.child("users/"
                                                 + firebase.getAuth().getUid()

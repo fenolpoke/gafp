@@ -53,7 +53,7 @@ public class EditHabitActivity extends AppCompatActivity {
 
 
                 titleEditText.setText(dataSnapshot.getKey());
-                descriptionEditText.setText(dataSnapshot.child("description").getValue().toString());
+                descriptionEditText.setText( dataSnapshot.hasChild("description") ? dataSnapshot.child("description").getValue().toString() : "");
 
             }
 
@@ -94,14 +94,15 @@ public class EditHabitActivity extends AppCompatActivity {
         firebase.child("users/"+firebase.getAuth().getUid()+"/habits/"+getIntent().getStringExtra("type")+"/"+getIntent().getStringExtra("title")).removeValue();
 
         Toast.makeText(EditHabitActivity.this, "Habit Edited!", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getApplicationContext(), HabitsActivity.class));
-
+//        startActivity(new Intent(getApplicationContext(), HabitsActivity.class));
+        finish();
     }
     public void del(View view){
         firebase.child("users/"+firebase.getAuth().getUid()+"/habits/"+getIntent().getStringExtra("type")+"/"+getIntent().getStringExtra("title")).removeValue();
 
         Toast.makeText(EditHabitActivity.this, "Habit Deleted!", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getApplicationContext(), HabitsActivity.class));
+//        startActivity(new Intent(getApplicationContext(), HabitsActivity.class));
+        finish();
 
     }
     public void month(View view){

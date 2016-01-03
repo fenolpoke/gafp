@@ -110,8 +110,8 @@ public class HomeActivity extends AppCompatActivity
                 String name = dataSnapshot.hasChild("username") ? dataSnapshot.child("username").getValue().toString() : "User";
 
                 //rank
-                final String rank = dataSnapshot.child("rank").getValue().toString();
-                final String nextLevel = dataSnapshot.child("point").getValue().toString();
+                final String rank = dataSnapshot.hasChild("rank") ?  dataSnapshot.child("rank").getValue().toString() : "Amateur";
+                final String nextLevel =dataSnapshot.hasChild("point") ?  dataSnapshot.child("point").getValue().toString() : "0";
                 firebase.child("rank").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -132,7 +132,7 @@ public class HomeActivity extends AppCompatActivity
 
 
 
-                String money = dataSnapshot.child("money").getValue().toString();
+                String money =dataSnapshot.hasChild("money") ?  dataSnapshot.child("money").getValue().toString() : "0";
 
                 //setAvatar
                 ImageView avatar = (ImageView) findViewById(R.id.avatarImageView);
@@ -144,6 +144,7 @@ public class HomeActivity extends AppCompatActivity
                     break;
                     }
                 }
+                if (avatarString == "") avatarString = "";
                 int avaID = getResources().getIdentifier(avatarString, "drawable", getPackageName());
                 if(avatar != null) avatar.setImageResource(avaID);
 
@@ -166,12 +167,15 @@ public class HomeActivity extends AppCompatActivity
                 TextView moneyText = (TextView) findViewById(R.id.moneyTextView);
 
                 usernameText.setText(name);
-                rankText.setText(newRank.get(0));
+                if(newRank.size() < 1) rankText.setText("Amateur");
+                else rankText.setText(newRank.get(0));
                 nextlevelText.setText("Points : " + nextLevel);
                 moneyText.setText(money);
 
                 ((TextView) findViewById(R.id.goodday)).
                 setText("What's up, " + name);
+
+                boolean done = false;
 
                 if (dataSnapshot.child("tasks").exists()) {
                     DataSnapshot tasks = dataSnapshot.child("tasks");
@@ -205,10 +209,12 @@ public class HomeActivity extends AppCompatActivity
                         });
 
                                 ((LinearLayout) findViewById(R.id.tasks)).addView(deadline);
+                                done = true;
                             }
                         }
                     }
-                } else {
+                }
+                if(!done){
                     TextView text = new TextView(getApplicationContext());
                     text.setText("You have no tasks today");
                     ((LinearLayout) findViewById(R.id.tasks)).addView(text);
@@ -216,7 +222,7 @@ public class HomeActivity extends AppCompatActivity
 
                 if (dataSnapshot.child("habits").exists()) {
                     DataSnapshot habits = dataSnapshot.child("habits");
-                    boolean done = false;
+                    done = false;
                     for (final DataSnapshot type : habits.getChildren()) {
 
                         for (final DataSnapshot habit : type.getChildren()) {
@@ -247,8 +253,8 @@ public class HomeActivity extends AppCompatActivity
                                         if (isChecked) {
 
                                             String last = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
-                                            int streak = Integer.parseInt(habit.child("streak").getValue().toString()) + 1;
-                                            int best = Integer.parseInt(habit.child("best").getValue().toString());
+                                            int streak = Integer.parseInt(habit.hasChild("streak") ? habit.child("streak").getValue().toString() : "0") + 1;
+                                            int best = Integer.parseInt(habit.hasChild("best") ? habit.child("best").getValue().toString() : "0");
 
                                             if (best < streak)
                                                 best = streak;
@@ -265,7 +271,7 @@ public class HomeActivity extends AppCompatActivity
                                                     + type.getKey() + "/" + habit.getKey())
                                                     .updateChildren(habitV);
 
-                                            int point = Integer.parseInt(dataSnapshot.child("point").getValue().toString());
+                                            int point = Integer.parseInt(dataSnapshot.hasChild("point") ? dataSnapshot.child("point").getValue().toString() : "0");
 
                                             firebase.child("users/"
                                                     + firebase.getAuth().getUid()
@@ -278,8 +284,8 @@ public class HomeActivity extends AppCompatActivity
 
                                     }
                                 });
-                                done = true;
                                 ((LinearLayout) findViewById(R.id.habits)).addView(deadline);
+                                done = true;
                             }
 
                         }

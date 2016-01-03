@@ -91,7 +91,7 @@ public class ThemeFragment extends Fragment {
 
                 Toast.makeText(getActivity().getApplicationContext(), dataSnapshot.getChildrenCount() + "", Toast.LENGTH_LONG).show();
 
-                userMoney.add(Integer.parseInt(dataSnapshot.child("money").getValue().toString()));
+                userMoney.add(Integer.parseInt(dataSnapshot.hasChild("money") ? dataSnapshot.child("money").getValue().toString() : "0"));
                 DataSnapshot ownedTheme = dataSnapshot.child("themes");
                 for (final DataSnapshot theme : ownedTheme.getChildren()) {
                     userOwnedTheme.add(theme.getKey().toString());
@@ -135,7 +135,7 @@ public class ThemeFragment extends Fragment {
                             //Button purchase = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpPurchase);
                             // Button cancel = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpCancel);
 
-                            final AlertDialog.Builder alertPurchase = new AlertDialog.Builder(getActivity().getApplicationContext());
+                            final AlertDialog.Builder alertPurchase = new AlertDialog.Builder(getActivity());
                             alertPurchase.setView(alertPurchaseLayout);
 
                             int cancelBtnID = getResources().getIdentifier("btnPopUpCancel", "id", getActivity().getPackageName());

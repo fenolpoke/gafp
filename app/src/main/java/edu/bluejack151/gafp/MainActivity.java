@@ -144,6 +144,41 @@ public class MainActivity extends AppCompatActivity {
                                 public void onError(FirebaseError firebaseError) {
 
                                     Toast.makeText(MainActivity.this, "main : " + firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    if(firebaseError.getMessage().contains("email")){
+                                    Toast.makeText(MainActivity.this, "Searching user..", Toast.LENGTH_SHORT).show();
+                                    firebase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                                if (user.child("email").getValue().toString().equalsIgnoreCase(finalEmail)) {
+
+                                                    Toast.makeText(MainActivity.this, "Found user!", Toast.LENGTH_SHORT).show();
+                                                    firebase.authWithPassword(finalEmail, user.child("password").getValue().toString(), new Firebase.AuthResultHandler() {
+                                                        @Override
+                                                        public void onAuthenticated(AuthData authData) {
+                                                            if (authData != null) {
+                                                                Toast.makeText(MainActivity.this, "You've been here before!", Toast.LENGTH_SHORT).show();
+                                                                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onAuthenticationError(FirebaseError firebaseError) {
+
+                                                            Toast.makeText(MainActivity.this, "auth err: " + firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(FirebaseError firebaseError) {
+                                            Toast.makeText(MainActivity.this, "cancelled: : " + firebaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    });
+                                    //                                  }
                                 }
                             });
 

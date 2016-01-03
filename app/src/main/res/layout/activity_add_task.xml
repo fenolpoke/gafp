@@ -19,17 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                layout="@layout/title_layout"
-                android:id="@+id/include" />
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/titleEditText"
-                android:layout_alignTop="@+id/include"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
@@ -57,24 +50,23 @@
                 android:layout_marginTop="10dp"
                 android:id="@+id/DeadlineText" />
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:ems="10"
-                android:id="@+id/editText"
-                android:layout_alignTop="@+id/DeadlineText"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
             <DatePicker
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:id="@+id/datePicker"
                 android:layout_below="@+id/DeadlineText"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:datePickerMode="calendar" />
         </RelativeLayout>
     </ScrollView>
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        layout="@layout/title_layout"
+        android:id="@+id/include"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
