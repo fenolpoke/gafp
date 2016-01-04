@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -54,6 +55,18 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        ((TextView) findViewById(R.id.goodday)).
+                setText("Loading..");
+        final TextView taskText = new TextView(getApplicationContext());
+        taskText.setTextColor(Color.BLACK);
+        taskText.setText("loading tasks...");
+        ((LinearLayout) findViewById(R.id.tasks)).addView(taskText);
+
+        final TextView habitText = new TextView(getApplicationContext());
+        habitText.setTextColor(Color.BLACK);
+        ((LinearLayout) findViewById(R.id.habits)).addView(habitText);
+        habitText.setText("Loading habits..");
 
         alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(getApplicationContext(), MainBootReceiver.class);
@@ -214,11 +227,8 @@ public class HomeActivity extends AppCompatActivity
                         }
                     }
                 }
-                if(!done){
-                    TextView text = new TextView(getApplicationContext());
-                    text.setText("You have no tasks today");
-                    ((LinearLayout) findViewById(R.id.tasks)).addView(text);
-                }
+                taskText.setText(done ? "":"You have no tasks today");
+
 
                 if (dataSnapshot.child("habits").exists()) {
                     DataSnapshot habits = dataSnapshot.child("habits");
@@ -290,13 +300,8 @@ public class HomeActivity extends AppCompatActivity
 
                         }
                     }
-                    if(!done){
+                    habitText.setText(done?"":"You have no habits today");
 
-
-                        TextView text = new TextView(getApplicationContext());
-                        text.setText("You have no habits today");
-                        ((LinearLayout) findViewById(R.id.habits)).addView(text);
-                    }
 
                 }
             }

@@ -1,6 +1,7 @@
 package edu.bluejack151.gafp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.MutableData;
 import com.firebase.client.Transaction;
 import com.firebase.client.ValueEventListener;
+import com.firebase.client.collection.LLRBNode;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +35,13 @@ public class HabitsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habits);
+
+        final TextView text = new TextView(getApplicationContext());
+        text.setTextColor(Color.BLACK);
+        text.setText("Loading habits..");
+
+        ((LinearLayout) findViewById(R.id.habits)).addView(text);
+
 
         ImageButton addButton = (ImageButton) findViewById(R.id.addButton);
 
@@ -54,6 +63,7 @@ public class HabitsActivity extends AppCompatActivity {
             public void onDataChange(final DataSnapshot dataSnapshot) {
 
                 DataSnapshot habits = dataSnapshot.child("habits");
+                boolean done = false;
                 for (final DataSnapshot type : habits.getChildren()) {
                     for (final DataSnapshot habit : type.getChildren()) {
                         View habitL = LayoutInflater.from(getApplicationContext()).inflate(R.layout.habit_layout, null);
@@ -119,9 +129,12 @@ public class HabitsActivity extends AppCompatActivity {
                             });
                         }
                         ((LinearLayout) findViewById(R.id.habits)).addView(habitL);
+                        done = true;
 
                     }
                 }
+               text.setText(done ? "" : "You have no habits yet..");
+
             }
 
             @Override

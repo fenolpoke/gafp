@@ -1,6 +1,7 @@
 package edu.bluejack151.gafp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,11 @@ public class TimetableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timetable);
 
+        final TextView text = new TextView(getApplicationContext());
+        text.setTextColor(Color.BLACK);
+        text.setText("Loading task..");
+        ((LinearLayout) findViewById(R.id.timetable)).addView(text);
+
         ImageButton addButton = (ImageButton)findViewById(R.id.addButton);
 
         ((TextView)findViewById(R.id.titleTextView)).setText("Timetable");
@@ -51,6 +57,7 @@ public class TimetableActivity extends AppCompatActivity {
             public void onDataChange(final DataSnapshot dataSnapshot) {
 
                 DataSnapshot tasks = dataSnapshot.child("tasks");
+                boolean done = false;
                 for (final DataSnapshot deadline : tasks.getChildren()) {
                     for (final DataSnapshot task : deadline.getChildren()) {
                         Date now, date;
@@ -112,9 +119,12 @@ public class TimetableActivity extends AppCompatActivity {
                             });
                         }
                         ((LinearLayout) findViewById(R.id.timetable)).addView(timetable);
+                        done = true;
 
                     }
                 }
+                text.setText(done ? "" : "You have no task yet..");
+
             }
 
 

@@ -43,6 +43,7 @@ public class MainBootReceiver extends BroadcastReceiver {
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                         .setContentTitle("GAFP")
+                        .setSmallIcon(R.drawable.titlelogo)
                         .setTicker("GAFP notification")
                         .setContentText("Do your task!");
 
