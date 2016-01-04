@@ -79,6 +79,13 @@ public class AvatarFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
+        final TextView text = new TextView(getActivity());
+        text.setTextColor(Color.BLACK);
+        text.setText("Loading avatars..");
+        if(getActivity().findViewById(R.id.avatarLinearLayout) != null)
+            ((LinearLayout) getActivity().findViewById(R.id.avatarLinearLayout)).addView(text);
+
         firebase.setAndroidContext(getActivity().getApplicationContext());
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
 
@@ -109,6 +116,7 @@ public class AvatarFragment extends Fragment {
             public void onDataChange(final DataSnapshot dataSnapshot) {
 
                 Toast.makeText(getActivity().getApplicationContext(), dataSnapshot.getChildrenCount() + "", Toast.LENGTH_LONG).show();
+                boolean done = false;
                 for (final DataSnapshot avatar : dataSnapshot.getChildren()) {
                     View layoutAvatar = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.avatar_layout, null);
                     TextView avTitle = (TextView) layoutAvatar.findViewById(R.id.avatarTitle);
@@ -128,12 +136,12 @@ public class AvatarFragment extends Fragment {
                     btnPurchase.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                       //     Toast.makeText(getActivity().getApplicationContext(), "Purchase " + v.getId(), Toast.LENGTH_LONG).show();
+                            //     Toast.makeText(getActivity().getApplicationContext(), "Purchase " + v.getId(), Toast.LENGTH_LONG).show();
 
                             LayoutInflater inflater = getActivity().getLayoutInflater();
                             View alertPurchaseLayout = inflater.inflate(R.layout.popup_confirmation, null);
                             //Button purchase = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpPurchase);
-                           // Button cancel = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpCancel);
+                            // Button cancel = (Button) alertPurchaseLayout.findViewById(R.id.btnPopUpCancel);
 
                             final AlertDialog.Builder alertPurchase = new AlertDialog.Builder(getActivity());
                             alertPurchase.setView(alertPurchaseLayout);
@@ -160,8 +168,8 @@ public class AvatarFragment extends Fragment {
 
                                         //add
                                         Map<String, Object> addNewAvatar = new HashMap<String, Object>();
-                                        addNewAvatar.put(imageName,true);
-                                        firebase.child("users/" + firebase.getAuth().getUid()+"/avatar").updateChildren(addNewAvatar);
+                                        addNewAvatar.put(imageName, true);
+                                        firebase.child("users/" + firebase.getAuth().getUid() + "/avatar").updateChildren(addNewAvatar);
 
 
                                         Toast.makeText(getActivity().getApplicationContext(), "Thank you for purchasing", Toast.LENGTH_LONG).show();
@@ -186,7 +194,9 @@ public class AvatarFragment extends Fragment {
                     }
 
                     ((LinearLayout) getActivity().findViewById(R.id.avatarLinearLayout)).addView(layoutAvatar);
+                    done = true;
                 }
+                text.setText(done? "" : "There's no avatar yet..");
             }
 
             @Override

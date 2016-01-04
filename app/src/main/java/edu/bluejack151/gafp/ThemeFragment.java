@@ -79,6 +79,12 @@ public class ThemeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        final TextView text = new TextView(getActivity());
+        text.setTextColor(Color.BLACK);
+        text.setText("Loading themes..");
+        if(getActivity().findViewById((R.id.themeLinearLayout)) != null)
+            ((LinearLayout) getActivity().findViewById(R.id.themeLinearLayout)).addView(text);
+
         firebase.setAndroidContext(getActivity().getApplicationContext());
         firebase = new Firebase("https://tpa-gap.firebaseio.com/");
 
@@ -109,6 +115,8 @@ public class ThemeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Toast.makeText(getActivity().getApplicationContext(),dataSnapshot.getChildrenCount()+"",Toast.LENGTH_LONG).show();
+
+                boolean done = false;
                 for (final DataSnapshot theme : dataSnapshot.getChildren()) {
                     View layoutTheme = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.theme_layout, null);
                     TextView thTitle = (TextView) layoutTheme.findViewById(R.id.themeTitle);
@@ -186,7 +194,9 @@ public class ThemeFragment extends Fragment {
 
 
                     ((LinearLayout) getActivity().findViewById(R.id.themeLinearLayout)).addView(layoutTheme);
+                    done = true;
                 }
+                text.setText(done? "" : "There's no theme yet..");
             }
 
             @Override
